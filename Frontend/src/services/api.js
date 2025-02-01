@@ -2,6 +2,7 @@ import axios from "axios";
 
 // Adjust this if your backend is on a different URL/port
 const API_BASE = process.env.REACT_APP_API_BASE || "http://localhost:8000";
+console.log("Using API Base URL:", API_BASE);
 
 // Add default headers for all requests
 axios.defaults.headers.common['Content-Type'] = 'application/json';
