@@ -2,19 +2,19 @@
 import React, { useState, useEffect } from "react";
 import { getPatientInjuries } from "../services/api";
 
-function CreateNewRecoveryPlan() {
-  const [selectedPatient, setSelectedPatient] = useState("");
+function CreateNewRecoveryPlan({ userEmail }) {
   const [injuries, setInjuries] = useState([]);
 
   useEffect(() => {
-    if (selectedPatient) {
+    // Fetch injuries when the component mounts or when userEmail changes.
+    if (userEmail) {
       fetchInjuries();
     }
-  }, [selectedPatient]);
+  }, [userEmail]);
 
   const fetchInjuries = async () => {
     try {
-      const data = await getPatientInjuries(selectedPatient);
+      const data = await getPatientInjuries(userEmail);
       setInjuries(data);
     } catch (error) {
       console.error("Error fetching injuries:", error);
@@ -31,20 +31,10 @@ function CreateNewRecoveryPlan() {
   return (
     <div>
       <h3>Create a New Recovery Plan</h3>
+      <p>
+        Viewing injury assessments for <strong>{userEmail}</strong>.
+      </p>
       
-      <div style={{ marginBottom: "2rem" }}>
-        <label style={{ display: "block", marginBottom: "0.5rem" }}>
-          Select Patient:
-        </label>
-        <input
-          type="text"
-          value={selectedPatient}
-          onChange={(e) => setSelectedPatient(e.target.value)}
-          placeholder="Enter patient name"
-          style={{ padding: "0.5rem" }}
-        />
-      </div>
-
       {injuries.length > 0 ? (
         <div>
           <h4>Previous Injury Assessments</h4>
@@ -117,10 +107,8 @@ function CreateNewRecoveryPlan() {
             </div>
           ))}
         </div>
-      ) : selectedPatient ? (
-        <p>No injury assessments found for this patient.</p>
       ) : (
-        <p>Select a patient to view their injury assessments.</p>
+        <p>No injury assessments found for {userEmail}.</p>
       )}
     </div>
   );

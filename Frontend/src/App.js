@@ -51,11 +51,11 @@ function App() {
       break;
     case "CreateNewRecoveryPlan":
       headerTitle = "Create a New Recovery Plan";
-      content = <CreateNewRecoveryPlan />;
+      content = <CreateNewRecoveryPlan userEmail={user.email} />
       break;
     case "AddInjury":
       headerTitle = "Add an Injury";
-      content = <AddInjury />;
+      content = <AddInjury userEmail={user.email} />;
       break;
     case "TalkWithPT":
       headerTitle = "Talk with a Physical Therapist";
