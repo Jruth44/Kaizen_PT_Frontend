@@ -76,15 +76,15 @@ function InjuryQuestionnaireForm({ selectedPatient }) {
       aggravating_factors: formData.what_makes_it_worse,
       easing_factors: formData.what_makes_it_better,
       mechanism_of_injury: formData.mechanism_of_injury,
-      severity_best: parseInt(formData.severity_best),
-      severity_worst: parseInt(formData.severity_worst),
-      severity_daily_avg: parseInt(formData.severity_daily_avg),
+      severity_best: Number(formData.severity_best) || 0,
+      severity_worst: Number(formData.severity_worst) || 0,
+      severity_daily_avg: Number(formData.severity_daily_avg) || 0,
       irritability_factors: formData.irritability_factors,
       nature_of_pain: formData.nature_of_pain,
       stage: formData.stage,
       stability: formData.stability,
       specialized_data: formData.specialized_data,
-    };
+    };    
 
     try {
       const result = await submitInjuryQuestionnaire(selectedPatient, payload);
