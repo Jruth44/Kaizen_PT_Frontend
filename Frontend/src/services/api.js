@@ -62,8 +62,9 @@ export async function getOverallPTSchedule() {
 
 export async function submitInjuryQuestionnaire(patientName, questionnaireData) {
   try {
+    const encodedPatientName = encodeURIComponent(patientName);
     const res = await axios.post(
-      `${API_BASE}/patients/${patientName}/injury_questionnaire`,
+      `${API_BASE}/patients/${encodedPatientName}/injury_questionnaire`,
       questionnaireData,
       {
         headers: {
