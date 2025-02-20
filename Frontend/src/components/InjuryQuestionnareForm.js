@@ -91,17 +91,17 @@ function InjuryQuestionnaireForm({ selectedPatient }) {
       setDiagnosisResult(result);
       alert("Injury questionnaire submitted successfully!");
     } catch (error) {
-      console.error("Submission error:", error);
-      if (error.response) {
-        alert(`Error: ${error.response.data.detail || "Server error occurred"}`);
-      } else if (error.request) {
-        alert(
-          "Error: Could not connect to the server. Please check if the backend is running on http://localhost:8000"
-        );
-      } else {
+        console.error("Submission error:", error);
+        let errorMsg = "An unknown error occurred.";
+        if (error.response && error.response.data && error.response.data.detail) {
+          errorMsg = error.response.data.detail;
+        } else if (error.message) {
+          errorMsg = error.message;
+        } else {
+          errorMsg = JSON.stringify(error);
+        }
         alert(`Error: ${error.message}`);
       }
-    }
   };
 
   return (
