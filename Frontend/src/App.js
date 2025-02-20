@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios"; // Import axios to set global defaults
 import Sidebar from "./components/Sidebar";
 import Header from "./components/Header";
 import CurrentRecoveryPlan from "./components/CurrentRecoveryPlan";
@@ -36,6 +37,15 @@ function App() {
     };
   }, []);
 
+  // Set Axios default Authorization header when session changes
+  useEffect(() => {
+    if (session && session.access_token) {
+      axios.defaults.headers.common["Authorization"] = `Bearer ${session.access_token}`;
+    } else {
+      delete axios.defaults.headers.common["Authorization"];
+    }
+  }, [session]);
+
   // If the user is not logged in, display the Login component
   if (!session) {
     return <Login onLogin={(session) => { setSession(session); setUser(session.user); }} />;
@@ -51,7 +61,7 @@ function App() {
       break;
     case "CreateNewRecoveryPlan":
       headerTitle = "Create a New Recovery Plan";
-      content = <CreateNewRecoveryPlan userEmail={user.email} />
+      content = <CreateNewRecoveryPlan userEmail={user.email} />;
       break;
     case "AddInjury":
       headerTitle = "Add an Injury";
