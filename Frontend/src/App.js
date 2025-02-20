@@ -24,11 +24,13 @@ function App() {
   // Subscribe to auth state changes
   useEffect(() => {
     const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
+      console.log("Auth state change:", event, session);
       setSession(session);
       setUser(session?.user || null);
     });
     // Check for an existing session on initial load
     supabase.auth.getSession().then(({ data: { session } }) => {
+      console.log("Initial session:", session);
       setSession(session);
       setUser(session?.user || null);
     });
@@ -40,6 +42,7 @@ function App() {
   // Set Axios default Authorization header when session changes
   useEffect(() => {
     if (session && session.access_token) {
+      console.log("Setting Axios Authorization header:", session.access_token);
       axios.defaults.headers.common["Authorization"] = `Bearer ${session.access_token}`;
     } else {
       delete axios.defaults.headers.common["Authorization"];
