@@ -68,7 +68,7 @@ function InjuryQuestionnaireForm({ selectedPatient }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     const payload = {
       body_part: formData.body_part,
       hurting_description: formData.hurting_description,
@@ -76,33 +76,38 @@ function InjuryQuestionnaireForm({ selectedPatient }) {
       aggravating_factors: formData.what_makes_it_worse,
       easing_factors: formData.what_makes_it_better,
       mechanism_of_injury: formData.mechanism_of_injury,
-      severity_best: Number(formData.severity_best) || 0,
-      severity_worst: Number(formData.severity_worst) || 0,
-      severity_daily_avg: Number(formData.severity_daily_avg) || 0,
+      severity_best: isNaN(parseInt(formData.severity_best, 10))
+        ? 0
+        : parseInt(formData.severity_best, 10),
+      severity_worst: isNaN(parseInt(formData.severity_worst, 10))
+        ? 0
+        : parseInt(formData.severity_worst, 10),
+      severity_daily_avg: isNaN(parseInt(formData.severity_daily_avg, 10))
+        ? 0
+        : parseInt(formData.severity_daily_avg, 10),
       irritability_factors: formData.irritability_factors,
       nature_of_pain: formData.nature_of_pain,
       stage: formData.stage,
       stability: formData.stability,
       specialized_data: formData.specialized_data,
-    };    
-
+    };
+  
     try {
       const result = await submitInjuryQuestionnaire(selectedPatient, payload);
       setDiagnosisResult(result);
       alert("Injury questionnaire submitted successfully!");
     } catch (error) {
-        console.error("Submission error:", error);
-        let errorMsg = "An unknown error occurred.";
-        if (error.response && error.response.data && error.response.data.detail) {
-          errorMsg = error.response.data.detail;
-        } else if (error.message) {
-          errorMsg = error.message;
-        } else {
-          errorMsg = JSON.stringify(error);
-        }
+      console.error("Submission error:", error);
+      if (error.response) {
+        alert(`Error: ${error.response.data.detail || "Server error occurred"}`);
+      } else if (error.request) {
+        alert("Error: Could not connect to the server. Please check if the backend is running on http://localhost:8000");
+      } else {
         alert(`Error: ${error.message}`);
       }
+    }
   };
+  
 
   return (
     <div>

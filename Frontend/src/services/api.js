@@ -63,13 +63,13 @@ export async function getOverallPTSchedule() {
 export async function submitInjuryQuestionnaire(patientName, questionnaireData) {
   try {
     const encodedPatientName = encodeURIComponent(patientName);
+    const url = `${API_BASE}/patients/${encodedPatientName}/injury_questionnaire`;
+    console.log("Submitting to URL:", url);
     const res = await axios.post(
-      `${API_BASE}/patients/${encodedPatientName}/injury_questionnaire`,
+      url,
       questionnaireData,
       {
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
       }
     );
     return res.data;
