@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import axios from "axios"; // For setting global defaults
 import Sidebar from "./components/Sidebar";
 import Header from "./components/Header";
 import CurrentRecoveryPlan from "./components/CurrentRecoveryPlan";
@@ -7,14 +7,9 @@ import CreateNewRecoveryPlan from "./components/CreateNewRecoveryPlan";
 import AddInjury from "./components/AddInjury";
 import TalkWithPT from "./components/TalkWithPT";
 import Login from "./components/Login";
-import { supabase } from "./supabaseClient"; // Use the centralized client
+import { supabase } from "./supabaseClient"; // Import the centralized client
 
 import "./App.css";
-
-// Initialize Supabase client
-const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
-const supabaseAnonKey = process.env.REACT_APP_SUPABASE_ANON_KEY;
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 function App() {
   const [selectedPage, setSelectedPage] = useState("CurrentRecoveryPlan");
