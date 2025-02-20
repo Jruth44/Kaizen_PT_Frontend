@@ -1,11 +1,6 @@
-// frontend/src/components/Login.js
+// Login.js
 import React, { useState } from 'react';
-import { createClient } from '@supabase/supabase-js';
-
-// Initialize Supabase client using environment variables
-const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
-const supabaseAnonKey = process.env.REACT_APP_SUPABASE_ANON_KEY;
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
+import { supabase } from '../supabaseClient'; // Import the centralized client
 
 function Login({ onLogin }) {
   const [email, setEmail] = useState('');
@@ -28,10 +23,7 @@ function Login({ onLogin }) {
       if (error) {
         setErrorMsg(error.message);
       } else {
-        // Registration was successful.
-        // Depending on your Supabase settings, the user may need to verify their email.
         setInfoMsg("Registration successful! Please check your email for a confirmation link.");
-        // Optionally, you can auto-login the user here if you wish.
       }
     } else {
       // Login flow
@@ -42,7 +34,6 @@ function Login({ onLogin }) {
       if (error) {
         setErrorMsg(error.message);
       } else {
-        // On successful login, pass the session to the parent component.
         onLogin(data.session);
       }
     }
