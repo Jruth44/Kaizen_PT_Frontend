@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios"; // Import axios to set global defaults
+import axios from "axios";
 import Sidebar from "./components/Sidebar";
 import Header from "./components/Header";
 import CurrentRecoveryPlan from "./components/CurrentRecoveryPlan";
@@ -7,7 +7,7 @@ import CreateNewRecoveryPlan from "./components/CreateNewRecoveryPlan";
 import AddInjury from "./components/AddInjury";
 import TalkWithPT from "./components/TalkWithPT";
 import Login from "./components/Login";
-import { createClient } from '@supabase/supabase-js';
+import { supabase } from "./supabaseClient"; // Use the centralized client
 
 import "./App.css";
 
