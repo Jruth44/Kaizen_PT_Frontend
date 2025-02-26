@@ -80,6 +80,23 @@ export async function submitInjuryQuestionnaire(patientName, questionnaireData) 
 }
 
 export async function getPatientInjuries(patientName) {
-  const res = await axios.get(`${API_BASE}/patients/${patientName}/injuries`);
-  return res.data;
+  try {
+    const encodedPatientName = encodeURIComponent(patientName);
+    const res = await axios.get(`${API_BASE}/patients/${encodedPatientName}/injuries`);
+    return res.data;
+  } catch (error) {
+    console.error('Error fetching patient injuries:', error);
+    throw error;
+  }
+}
+
+export async function generateRecoveryPlan(patientName) {
+  try {
+    const encodedPatientName = encodeURIComponent(patientName);
+    const res = await axios.post(`${API_BASE}/patients/${encodedPatientName}/generate_recovery_plan`);
+    return res.data;
+  } catch (error) {
+    console.error('Error generating recovery plan:', error);
+    throw error;
+  }
 }
