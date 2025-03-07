@@ -139,7 +139,7 @@ function InjuryQuestionnaireForm({ selectedPatient }) {
         <p style={{ fontSize: "0.9rem", color: "#666", marginBottom: "1rem" }}>
           Click on the body map to select the area where you're experiencing pain.
         </p>
-        <BodyMap 
+        <BodyMap
           selectedBodyPart={formData.body_part} 
           onSelectBodyPart={handleBodyPartSelect} 
         />
