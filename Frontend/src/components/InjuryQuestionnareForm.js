@@ -31,6 +31,8 @@ function InjuryQuestionnaireForm({ selectedPatient }) {
   });
 
   const [diagnosisResult, setDiagnosisResult] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState(null);
 
   // Handle input changes for standard fields.
   const handleChange = (e) => {
@@ -68,6 +70,8 @@ function InjuryQuestionnaireForm({ selectedPatient }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
+    setError(null);
   
     const payload = {
       body_part: formData.body_part,
@@ -95,229 +99,36 @@ function InjuryQuestionnaireForm({ selectedPatient }) {
     try {
       const result = await submitInjuryQuestionnaire(selectedPatient, payload);
       setDiagnosisResult(result);
-      alert("Injury questionnaire submitted successfully!");
+      setIsSubmitting(false);
+      // Scroll to the results
+      const resultElement = document.getElementById("diagnosis-result");
+      if (resultElement) {
+        resultElement.scrollIntoView({ behavior: "smooth" });
+      }
     } catch (error) {
+      setIsSubmitting(false);
+      setError(error);
       console.error("Submission error:", error);
       if (error.response) {
-        alert(`Error: ${error.response.data.detail || "Server error occurred"}`);
+        setError(`Error: ${error.response.data.detail || "Server error occurred"}`);
       } else if (error.request) {
-        alert("Error: Could not connect to the server. Please check if the backend is running on http://localhost:8000");
+        setError("Error: Could not connect to the server. Please check if the backend is running.");
       } else {
-        alert(`Error: ${error.message}`);
+        setError(`Error: ${error.message}`);
       }
     }
   };
-  
 
-  return (
-    <div>
-      <h2>Add or Update Your Injury Info</h2>
-      <p style={{ fontSize: "0.9rem", color: "#666" }}>
-        Please fill out the questions below to help us (and our AI) understand your current injury.
-        Don't worry if you're unsure about any tests or technical details—just fill in what you can!
-      </p>
-
-      {/* The form is always rendered since selectedPatient is now provided automatically */}
-      <form onSubmit={handleSubmit} style={{ marginTop: "1rem" }}>
-        {/* Body Part */}
-        <div style={{ marginBottom: "1rem" }}>
-          <label style={{ display: "block", fontWeight: "bold" }}>
-            Injured Body Part or Region:
-          </label>
-          <select
-            name="body_part"
-            value={formData.body_part}
-            onChange={handleChange}
-            style={{ width: "100%", padding: "0.3rem" }}
-          >
-            <option>Shoulder</option>
-            <option>Knee</option>
-            <option>Hip</option>
-            <option>Back</option>
-            <option>Neck</option>
-            {/* etc. */}
-          </select>
-        </div>
-
-        {/* Hurting Description */}
-        <div style={{ marginBottom: "1rem" }}>
-          <label style={{ display: "block", fontWeight: "bold" }}>
-            Describe Where It Hurts and How It Feels:
-          </label>
-          <textarea
-            name="hurting_description"
-            value={formData.hurting_description}
-            onChange={handleChange}
-            placeholder="E.g. 'A sharp pain in the front of my shoulder...'"
-            style={{ width: "100%", minHeight: "60px", padding: "0.3rem" }}
-          />
-        </div>
-
-        {/* Date of Onset */}
-        <div style={{ marginBottom: "1rem" }}>
-          <label style={{ display: "block", fontWeight: "bold" }}>
-            When Did This Injury Start (Date of Onset):
-          </label>
-          <input
-            type="text"
-            name="date_of_onset"
-            value={formData.date_of_onset}
-            onChange={handleChange}
-            placeholder="E.g. '2 weeks ago', '06/01/2025', etc."
-            style={{ width: "100%", padding: "0.3rem" }}
-          />
-        </div>
-
-        {/* Aggravating Factors */}
-        <div style={{ marginBottom: "1rem" }}>
-          <label style={{ display: "block", fontWeight: "bold" }}>
-            What Makes It Worse? (Aggravating Factors)
-          </label>
-          <textarea
-            name="what_makes_it_worse"
-            value={formData.what_makes_it_worse}
-            onChange={handleChange}
-            placeholder="E.g. 'Reaching overhead, lifting heavy objects...'"
-            style={{ width: "100%", minHeight: "60px", padding: "0.3rem" }}
-          />
-        </div>
-
-        {/* Easing Factors */}
-        <div style={{ marginBottom: "1rem" }}>
-          <label style={{ display: "block", fontWeight: "bold" }}>
-            What Makes It Better? (Easing Factors)
-          </label>
-          <textarea
-            name="what_makes_it_better"
-            value={formData.what_makes_it_better}
-            onChange={handleChange}
-            placeholder="E.g. 'Applying ice, resting, taking ibuprofen...'"
-            style={{ width: "100%", minHeight: "60px", padding: "0.3rem" }}
-          />
-        </div>
-
-        {/* Mechanism of Injury */}
-        <div style={{ marginBottom: "1rem" }}>
-          <label style={{ display: "block", fontWeight: "bold" }}>
-            How Did It Happen? (Mechanism of Injury)
-          </label>
-          <input
-            type="text"
-            name="mechanism_of_injury"
-            value={formData.mechanism_of_injury}
-            onChange={handleChange}
-            placeholder="E.g. 'Fell on my arm', 'Twisted knee playing soccer'..."
-            style={{ width: "100%", padding: "0.3rem" }}
-          />
-        </div>
-
-        {/* Severity */}
-        <div style={{ display: "flex", gap: "1rem", marginBottom: "1rem" }}>
-          <div style={{ flex: 1 }}>
-            <label style={{ display: "block", fontWeight: "bold" }}>
-              Pain at Best (0-10):
-            </label>
-            <input
-              type="number"
-              name="severity_best"
-              min="0"
-              max="10"
-              value={formData.severity_best}
-              onChange={handleChange}
-              style={{ width: "100%", padding: "0.3rem" }}
-            />
-          </div>
-          <div style={{ flex: 1 }}>
-            <label style={{ display: "block", fontWeight: "bold" }}>
-              Pain at Worst (0-10):
-            </label>
-            <input
-              type="number"
-              name="severity_worst"
-              min="0"
-              max="10"
-              value={formData.severity_worst}
-              onChange={handleChange}
-              style={{ width: "100%", padding: "0.3rem" }}
-            />
-          </div>
-          <div style={{ flex: 1 }}>
-            <label style={{ display: "block", fontWeight: "bold" }}>
-              Daily Average Pain (0-10):
-            </label>
-            <input
-              type="number"
-              name="severity_daily_avg"
-              min="0"
-              max="10"
-              value={formData.severity_daily_avg}
-              onChange={handleChange}
-              style={{ width: "100%", padding: "0.3rem" }}
-            />
-          </div>
-        </div>
-
-        {/* Irritability, Nature, Stage, Stability */}
-        <div style={{ marginBottom: "1rem" }}>
-          <label style={{ display: "block", fontWeight: "bold" }}>Irritability Factors:</label>
-          <textarea
-            name="irritability_factors"
-            value={formData.irritability_factors}
-            onChange={handleChange}
-            placeholder="What activities or movements quickly aggravate your symptoms?"
-            style={{ width: "100%", minHeight: "60px", padding: "0.3rem" }}
-          />
-        </div>
-
-        <div style={{ marginBottom: "1rem" }}>
-          <label style={{ display: "block", fontWeight: "bold" }}>Nature of Pain:</label>
-          <textarea
-            name="nature_of_pain"
-            value={formData.nature_of_pain}
-            onChange={handleChange}
-            placeholder="E.g. Clicking, sharp, throbbing, burning..."
-            style={{ width: "100%", minHeight: "60px", padding: "0.3rem" }}
-          />
-        </div>
-
-        <div style={{ marginBottom: "1rem" }}>
-          <label style={{ display: "block", fontWeight: "bold" }}>Stage of Injury:</label>
-          <select
-            name="stage"
-            value={formData.stage}
-            onChange={handleChange}
-            style={{ width: "100%", padding: "0.3rem" }}
-          >
-            <option value="Acute">Acute (recent, 0-2 weeks)</option>
-            <option value="Subacute">Subacute (2-6 weeks)</option>
-            <option value="Chronic">Chronic (6+ weeks)</option>
-            <option value="Acute on Chronic">Acute on Chronic</option>
-          </select>
-        </div>
-
-        <div style={{ marginBottom: "1rem" }}>
-          <label style={{ display: "block", fontWeight: "bold" }}>Stability:</label>
-          <select
-            name="stability"
-            value={formData.stability}
-            onChange={handleChange}
-            style={{ width: "100%", padding: "0.3rem" }}
-          >
-            <option>Improving</option>
-            <option>Worsening</option>
-            <option>Not changing</option>
-            <option>Fluctuating</option>
-          </select>
-        </div>
-
-        {/* Shoulder-specific or other specialized data */}
-        {formData.body_part === "Shoulder" && (
+  // Render different specialized tests based on body part
+  const renderSpecializedTests = () => {
+    switch(formData.body_part) {
+      case "Shoulder":
+        return (
           <fieldset style={{ margin: "1rem 0", padding: "1rem", border: "1px solid #ccc" }}>
-            <legend style={{ fontWeight: "bold" }}>Optional Shoulder-Specific Tests</legend>
+            <legend style={{ fontWeight: "bold" }}>Shoulder-Specific Tests</legend>
             <p style={{ fontSize: "0.9rem", color: "#666", marginBottom: "1rem" }}>
-              These tests help identify shoulder impingement or rotator cuff issues. If you know
-              how to do them (or a PT has guided you), check the box if it reproduces your pain.
-              Otherwise, you can skip them.
+              These tests help identify shoulder impingement or rotator cuff issues. 
+              Check the box if the test reproduces your pain.
             </p>
 
             <div style={{ marginBottom: "0.5rem" }}>
@@ -408,51 +219,363 @@ function InjuryQuestionnaireForm({ selectedPatient }) {
               </div>
             </div>
           </fieldset>
-        )}
+        );
+      case "Knee":
+        return (
+          <fieldset style={{ margin: "1rem 0", padding: "1rem", border: "1px solid #ccc" }}>
+            <legend style={{ fontWeight: "bold" }}>Knee-Specific Tests</legend>
+            <p style={{ fontSize: "0.9rem", color: "#666", marginBottom: "1rem" }}>
+              These tests help identify potential knee ligament or meniscus issues.
+              Check the box if the test reproduces your pain.
+            </p>
+
+            <div style={{ marginBottom: "0.5rem" }}>
+              <label style={{ display: "block", fontWeight: "bold" }}>
+                Anterior Drawer Test
+              </label>
+              <small style={{ color: "#555" }}>
+                Tests for ACL integrity. Knee bent at 90°, forward pressure on tibia.
+              </small>
+              <br />
+              <label style={{ marginTop: "0.3rem" }}>
+                Positive?
+                <input
+                  type="checkbox"
+                  style={{ marginLeft: "0.5rem" }}
+                  checked={formData.specialized_data.special_tests.anterior_drawer}
+                  onChange={() => handleSpecialTestChange("anterior_drawer")}
+                />
+              </label>
+            </div>
+
+            <div style={{ marginBottom: "0.5rem" }}>
+              <label style={{ display: "block", fontWeight: "bold" }}>McMurray Test</label>
+              <small style={{ color: "#555" }}>
+                Tests for meniscus tears. Knee rotation with extension from flexed position.
+              </small>
+              <br />
+              <label style={{ marginTop: "0.3rem" }}>
+                Positive?
+                <input
+                  type="checkbox"
+                  style={{ marginLeft: "0.5rem" }}
+                  checked={formData.specialized_data.special_tests.mcmurray}
+                  onChange={() => handleSpecialTestChange("mcmurray")}
+                />
+              </label>
+            </div>
+
+            <hr style={{ margin: "1rem 0" }} />
+
+            <label style={{ display: "block", marginBottom: "0.5rem", fontWeight: "bold" }}>
+              Knee Range of Motion
+            </label>
+            <div style={{ display: "flex", gap: "1rem", marginTop: "0.5rem" }}>
+              <div>
+                <label>Flexion (°):</label>
+                <input
+                  type="number"
+                  value={formData.specialized_data.joint_angles.flexion}
+                  onChange={(e) => handleAngleChange("flexion", e.target.value)}
+                  style={{ width: "80px", marginLeft: "0.5rem" }}
+                />
+              </div>
+              <div>
+                <label>Extension (°):</label>
+                <input
+                  type="number"
+                  value={formData.specialized_data.joint_angles.extension}
+                  onChange={(e) => handleAngleChange("extension", e.target.value)}
+                  style={{ width: "80px", marginLeft: "0.5rem" }}
+                />
+              </div>
+            </div>
+          </fieldset>
+        );
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <div>
+      <h2>Add or Update Your Injury Info</h2>
+      <p style={{ fontSize: "0.9rem", color: "#666" }}>
+        Please fill out the questions below to help us (and our AI) understand your current injury.
+        Don't worry if you're unsure about any tests or technical details—just fill in what you can!
+      </p>
+      
+      {error && (
+        <div style={{ 
+          padding: "0.75rem", 
+          backgroundColor: "#f8d7da",
+          color: "#721c24",
+          borderRadius: "0.25rem",
+          marginBottom: "1rem",
+          marginTop: "1rem" 
+        }}>
+          {error}
+        </div>
+      )}
+
+      <form onSubmit={handleSubmit} style={{ marginTop: "1rem" }}>
+        {/* Body Part */}
+        <div style={{ marginBottom: "1rem" }}>
+          <label style={{ display: "block", fontWeight: "bold" }}>
+            Injured Body Part or Region:
+          </label>
+          <select
+            name="body_part"
+            value={formData.body_part}
+            onChange={handleChange}
+            style={{ width: "100%", padding: "0.5rem", borderRadius: "4px", border: "1px solid #ccc" }}
+          >
+            <option value="Shoulder">Shoulder</option>
+            <option value="Knee">Knee</option>
+            <option value="Hip">Hip</option>
+            <option value="Back">Back</option>
+            <option value="Neck">Neck</option>
+            <option value="Ankle">Ankle</option>
+            <option value="Wrist">Wrist</option>
+            <option value="Elbow">Elbow</option>
+          </select>
+        </div>
+
+        {/* Hurting Description */}
+        <div style={{ marginBottom: "1rem" }}>
+          <label style={{ display: "block", fontWeight: "bold" }}>
+            Describe Where It Hurts and How It Feels:
+          </label>
+          <textarea
+            name="hurting_description"
+            value={formData.hurting_description}
+            onChange={handleChange}
+            placeholder="E.g. 'A sharp pain in the front of my shoulder...'"
+            style={{ width: "100%", minHeight: "80px", padding: "0.5rem", borderRadius: "4px", border: "1px solid #ccc" }}
+            required
+          />
+        </div>
+
+        {/* Date of Onset */}
+        <div style={{ marginBottom: "1rem" }}>
+          <label style={{ display: "block", fontWeight: "bold" }}>
+            When Did This Injury Start (Date of Onset):
+          </label>
+          <input
+            type="text"
+            name="date_of_onset"
+            value={formData.date_of_onset}
+            onChange={handleChange}
+            placeholder="E.g. '2 weeks ago', '06/01/2025', etc."
+            style={{ width: "100%", padding: "0.5rem", borderRadius: "4px", border: "1px solid #ccc" }}
+            required
+          />
+        </div>
+
+        {/* Aggravating Factors */}
+        <div style={{ marginBottom: "1rem" }}>
+          <label style={{ display: "block", fontWeight: "bold" }}>
+            What Makes It Worse? (Aggravating Factors)
+          </label>
+          <textarea
+            name="what_makes_it_worse"
+            value={formData.what_makes_it_worse}
+            onChange={handleChange}
+            placeholder="E.g. 'Reaching overhead, lifting heavy objects...'"
+            style={{ width: "100%", minHeight: "80px", padding: "0.5rem", borderRadius: "4px", border: "1px solid #ccc" }}
+            required
+          />
+        </div>
+
+        {/* Easing Factors */}
+        <div style={{ marginBottom: "1rem" }}>
+          <label style={{ display: "block", fontWeight: "bold" }}>
+            What Makes It Better? (Easing Factors)
+          </label>
+          <textarea
+            name="what_makes_it_better"
+            value={formData.what_makes_it_better}
+            onChange={handleChange}
+            placeholder="E.g. 'Applying ice, resting, taking ibuprofen...'"
+            style={{ width: "100%", minHeight: "80px", padding: "0.5rem", borderRadius: "4px", border: "1px solid #ccc" }}
+            required
+          />
+        </div>
+
+        {/* Mechanism of Injury */}
+        <div style={{ marginBottom: "1rem" }}>
+          <label style={{ display: "block", fontWeight: "bold" }}>
+            How Did It Happen? (Mechanism of Injury)
+          </label>
+          <input
+            type="text"
+            name="mechanism_of_injury"
+            value={formData.mechanism_of_injury}
+            onChange={handleChange}
+            placeholder="E.g. 'Fell on my arm', 'Twisted knee playing soccer'..."
+            style={{ width: "100%", padding: "0.5rem", borderRadius: "4px", border: "1px solid #ccc" }}
+            required
+          />
+        </div>
+
+        {/* Severity */}
+        <div style={{ display: "flex", gap: "1rem", marginBottom: "1rem", flexWrap: "wrap" }}>
+          <div style={{ flex: "1 1 150px" }}>
+            <label style={{ display: "block", fontWeight: "bold" }}>
+              Pain at Best (0-10):
+            </label>
+            <input
+              type="number"
+              name="severity_best"
+              min="0"
+              max="10"
+              value={formData.severity_best}
+              onChange={handleChange}
+              style={{ width: "100%", padding: "0.5rem", borderRadius: "4px", border: "1px solid #ccc" }}
+              required
+            />
+          </div>
+          <div style={{ flex: "1 1 150px" }}>
+            <label style={{ display: "block", fontWeight: "bold" }}>
+              Pain at Worst (0-10):
+            </label>
+            <input
+              type="number"
+              name="severity_worst"
+              min="0"
+              max="10"
+              value={formData.severity_worst}
+              onChange={handleChange}
+              style={{ width: "100%", padding: "0.5rem", borderRadius: "4px", border: "1px solid #ccc" }}
+              required
+            />
+          </div>
+          <div style={{ flex: "1 1 150px" }}>
+            <label style={{ display: "block", fontWeight: "bold" }}>
+              Daily Average Pain (0-10):
+            </label>
+            <input
+              type="number"
+              name="severity_daily_avg"
+              min="0"
+              max="10"
+              value={formData.severity_daily_avg}
+              onChange={handleChange}
+              style={{ width: "100%", padding: "0.5rem", borderRadius: "4px", border: "1px solid #ccc" }}
+              required
+            />
+          </div>
+        </div>
+
+        {/* Irritability, Nature, Stage, Stability */}
+        <div style={{ marginBottom: "1rem" }}>
+          <label style={{ display: "block", fontWeight: "bold" }}>Irritability Factors:</label>
+          <textarea
+            name="irritability_factors"
+            value={formData.irritability_factors}
+            onChange={handleChange}
+            placeholder="What activities or movements quickly aggravate your symptoms?"
+            style={{ width: "100%", minHeight: "80px", padding: "0.5rem", borderRadius: "4px", border: "1px solid #ccc" }}
+          />
+        </div>
+
+        <div style={{ marginBottom: "1rem" }}>
+          <label style={{ display: "block", fontWeight: "bold" }}>Nature of Pain:</label>
+          <textarea
+            name="nature_of_pain"
+            value={formData.nature_of_pain}
+            onChange={handleChange}
+            placeholder="E.g. Clicking, sharp, throbbing, burning..."
+            style={{ width: "100%", minHeight: "80px", padding: "0.5rem", borderRadius: "4px", border: "1px solid #ccc" }}
+            required
+          />
+        </div>
+
+        <div style={{ marginBottom: "1rem" }}>
+          <label style={{ display: "block", fontWeight: "bold" }}>Stage of Injury:</label>
+          <select
+            name="stage"
+            value={formData.stage}
+            onChange={handleChange}
+            style={{ width: "100%", padding: "0.5rem", borderRadius: "4px", border: "1px solid #ccc" }}
+          >
+            <option value="Acute">Acute (recent, 0-2 weeks)</option>
+            <option value="Subacute">Subacute (2-6 weeks)</option>
+            <option value="Chronic">Chronic (6+ weeks)</option>
+            <option value="Acute on Chronic">Acute on Chronic</option>
+          </select>
+        </div>
+
+        <div style={{ marginBottom: "1rem" }}>
+          <label style={{ display: "block", fontWeight: "bold" }}>Stability:</label>
+          <select
+            name="stability"
+            value={formData.stability}
+            onChange={handleChange}
+            style={{ width: "100%", padding: "0.5rem", borderRadius: "4px", border: "1px solid #ccc" }}
+          >
+            <option value="Improving">Improving</option>
+            <option value="Worsening">Worsening</option>
+            <option value="Not changing">Not changing</option>
+            <option value="Fluctuating">Fluctuating</option>
+          </select>
+        </div>
+
+        {/* Render specialized tests based on body part */}
+        {renderSpecializedTests()}
 
         <button
           type="submit"
           style={{
-            marginTop: "1rem",
+            marginTop: "1.5rem",
             background: "#ff4646",
             color: "#fff",
-            padding: "0.5rem 1rem",
+            padding: "0.75rem 1.5rem",
             border: "none",
-            cursor: "pointer",
+            cursor: isSubmitting ? "not-allowed" : "pointer",
             borderRadius: "4px",
+            fontWeight: "600",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            width: "100%",
+            opacity: isSubmitting ? 0.7 : 1,
           }}
+          disabled={isSubmitting}
         >
-          Save My Injury Information
+          {isSubmitting ? "Submitting..." : "Save My Injury Information"}
         </button>
       </form>
 
       {diagnosisResult && (
         <div
+          id="diagnosis-result"
           style={{
             marginTop: "2rem",
-            padding: "1rem",
+            padding: "1.5rem",
             backgroundColor: "#f8f9fa",
-            borderRadius: "4px",
+            borderRadius: "8px",
             border: "1px solid #dee2e6",
+            borderLeft: "4px solid #ff4646"
           }}
         >
-          <h4 style={{ color: "#ff4646", marginBottom: "1rem" }}>
+          <h4 style={{ color: "#ff4646", marginBottom: "1.5rem", fontSize: "1.3rem" }}>
             AI Analysis Results
           </h4>
 
-          <div style={{ marginBottom: "1rem" }}>
-            <strong>Preliminary Diagnosis:</strong>
-            <p>{diagnosisResult.diagnosis}</p>
+          <div style={{ marginBottom: "1.5rem" }}>
+            <strong style={{ fontSize: "1.1rem" }}>Preliminary Diagnosis:</strong>
+            <p style={{ marginTop: "0.5rem", lineHeight: "1.6" }}>{diagnosisResult.diagnosis}</p>
           </div>
 
-          <div style={{ marginBottom: "1rem" }}>
-            <strong>Reasoning:</strong>
-            <p style={{ whiteSpace: "pre-wrap" }}>{diagnosisResult.reasoning}</p>
+          <div style={{ marginBottom: "1.5rem" }}>
+            <strong style={{ fontSize: "1.1rem" }}>Reasoning:</strong>
+            <p style={{ whiteSpace: "pre-wrap", marginTop: "0.5rem", lineHeight: "1.6" }}>{diagnosisResult.reasoning}</p>
           </div>
 
           <div>
-            <strong>Recommended Next Steps:</strong>
-            <p>{diagnosisResult.recommendations}</p>
+            <strong style={{ fontSize: "1.1rem" }}>Recommended Next Steps:</strong>
+            <p style={{ marginTop: "0.5rem", lineHeight: "1.6" }}>{diagnosisResult.recommendations}</p>
           </div>
         </div>
       )}
