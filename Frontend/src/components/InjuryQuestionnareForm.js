@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { submitInjuryQuestionnaire } from "../services/api";
 
 // Import custom components
-import ImprovedBodyMap from "./ImprovedBodyMap";
+import BodyMap from "./BodyMap";
 import BasicInfoFields from "./BasicInfoFields";
 import SecondaryInfoFields from "./SecondaryInfoFields";
 import PainRatingScale from "./PainRatingScale";
@@ -139,7 +139,7 @@ function InjuryQuestionnaireForm({ selectedPatient }) {
         <p style={{ fontSize: "0.9rem", color: "#666", marginBottom: "1rem" }}>
           Click on the body map to select the area where you're experiencing pain.
         </p>
-        <ImprovedBodyMap 
+        <BodyMap 
           selectedBodyPart={formData.body_part} 
           onSelectBodyPart={handleBodyPartSelect} 
         />
