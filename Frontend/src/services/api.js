@@ -100,3 +100,14 @@ export async function generateRecoveryPlan(patientName) {
     throw error;
   }
 }
+
+export async function deletePatientInjury(patientName, injuryIndex) {
+  try {
+    const encodedPatientName = encodeURIComponent(patientName);
+    const res = await axios.delete(`${API_BASE}/patients/${encodedPatientName}/injuries/${injuryIndex}`);
+    return res.data;
+  } catch (error) {
+    console.error('Error deleting patient injury:', error);
+    throw error;
+  }
+}

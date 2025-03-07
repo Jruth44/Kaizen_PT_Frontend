@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { getPatientInjuries, generateRecoveryPlan, getWeeklySchedule } from "../services/api";
+import { getPatientInjuries, generateRecoveryPlan, getWeeklySchedule, deletePatientInjury } from "../services/api";
 
 function CreateNewRecoveryPlan({ userEmail }) {
   const [injuries, setInjuries] = useState([]);
   const [recoveryPlan, setRecoveryPlan] = useState(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState(null);
+  const [selectedInjuries, setSelectedInjuries] = useState([]);
+  const [deleteConfirmation, setDeleteConfirmation] = useState({ show: false, index: null });
 
   useEffect(() => {
     // Fetch injuries when the component mounts or when userEmail changes.
@@ -19,6 +21,8 @@ function CreateNewRecoveryPlan({ userEmail }) {
     try {
       const data = await getPatientInjuries(userEmail);
       setInjuries(data);
+      // By default, select all injuries
+      setSelectedInjuries(data.map((_, index) => index));
     } catch (error) {
       console.error("Error fetching injuries:", error);
       setError("Failed to load injuries. Please try again later.");
@@ -40,9 +44,16 @@ function CreateNewRecoveryPlan({ userEmail }) {
   };
 
   const handleGeneratePlan = async () => {
+    if (selectedInjuries.length === 0) {
+      setError("Please select at least one injury to include in your recovery plan.");
+      return;
+    }
+
     setIsGenerating(true);
     setError(null);
     try {
+      // In a full implementation, we would pass selectedInjuries to the backend
+      // For now, we'll just generate based on all injuries
       const plan = await generateRecoveryPlan(userEmail);
       setRecoveryPlan(plan);
       setIsGenerating(false);
@@ -54,6 +65,27 @@ function CreateNewRecoveryPlan({ userEmail }) {
       );
       setIsGenerating(false);
     }
+  };
+
+  const handleDeleteInjury = async (index) => {
+    try {
+      await deletePatientInjury(userEmail, index);
+      // Filter out the deleted injury and refresh the list
+      setInjuries(injuries.filter((_, i) => i !== index));
+      setSelectedInjuries(selectedInjuries.filter(i => i !== index).map(i => i > index ? i - 1 : i));
+      setDeleteConfirmation({ show: false, index: null });
+    } catch (error) {
+      console.error("Error deleting injury:", error);
+      setError("Failed to delete injury. Please try again later.");
+    }
+  };
+
+  const toggleInjurySelection = (index) => {
+    setSelectedInjuries(prev => 
+      prev.includes(index) 
+        ? prev.filter(i => i !== index) 
+        : [...prev, index]
+    );
   };
 
   const formatSpecialTests = (tests) => {
@@ -85,6 +117,9 @@ function CreateNewRecoveryPlan({ userEmail }) {
       {injuries.length > 0 ? (
         <div>
           <h4>Previous Injury Assessments</h4>
+          <p style={{ marginBottom: "1rem" }}>
+            Select the injuries you want to include in your recovery plan:
+          </p>
           {injuries.map((injury, index) => (
             <div 
               key={index}
@@ -93,12 +128,76 @@ function CreateNewRecoveryPlan({ userEmail }) {
                 padding: "1rem",
                 backgroundColor: "#f8f9fa",
                 borderRadius: "4px",
-                border: "1px solid #dee2e6"
+                border: "1px solid #dee2e6",
+                position: "relative"
               }}
             >
-              <div style={{ marginBottom: "0.5rem" }}>
-                <strong>Body Part:</strong> {injury.body_part}
+              <div style={{ 
+                display: "flex", 
+                justifyContent: "space-between", 
+                alignItems: "flex-start",
+                marginBottom: "1rem"
+              }}>
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  <input 
+                    type="checkbox" 
+                    id={`injury-${index}`}
+                    checked={selectedInjuries.includes(index)}
+                    onChange={() => toggleInjurySelection(index)}
+                    style={{ marginRight: "0.5rem", transform: "scale(1.2)" }}
+                  />
+                  <label htmlFor={`injury-${index}`} style={{ fontWeight: "bold", fontSize: "1.1rem" }}>
+                    {injury.body_part} Injury
+                  </label>
+                </div>
+                <div>
+                  {deleteConfirmation.show && deleteConfirmation.index === index ? (
+                    <div style={{ display: "flex", gap: "0.5rem" }}>
+                      <button 
+                        onClick={() => handleDeleteInjury(index)}
+                        style={{
+                          backgroundColor: "#dc3545",
+                          color: "white",
+                          border: "none",
+                          padding: "0.25rem 0.5rem",
+                          borderRadius: "4px",
+                          cursor: "pointer"
+                        }}
+                      >
+                        Confirm
+                      </button>
+                      <button
+                        onClick={() => setDeleteConfirmation({ show: false, index: null })}
+                        style={{
+                          backgroundColor: "#6c757d",
+                          color: "white",
+                          border: "none",
+                          padding: "0.25rem 0.5rem",
+                          borderRadius: "4px",
+                          cursor: "pointer"
+                        }}
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  ) : (
+                    <button 
+                      onClick={() => setDeleteConfirmation({ show: true, index })}
+                      style={{
+                        backgroundColor: "transparent",
+                        color: "#dc3545",
+                        border: "1px solid #dc3545",
+                        padding: "0.25rem 0.5rem",
+                        borderRadius: "4px",
+                        cursor: "pointer"
+                      }}
+                    >
+                      Delete
+                    </button>
+                  )}
+                </div>
               </div>
+
               <div style={{ marginBottom: "0.5rem" }}>
                 <strong>Description:</strong> {injury.hurting_description}
               </div>
@@ -157,21 +256,21 @@ function CreateNewRecoveryPlan({ userEmail }) {
           <div style={{ marginTop: "2rem", marginBottom: "2rem" }}>
             <button
               onClick={handleGeneratePlan}
-              disabled={isGenerating}
+              disabled={isGenerating || selectedInjuries.length === 0}
               style={{
                 background: "#ff4646",
                 color: "#fff",
                 padding: "0.5rem 1rem",
                 border: "none",
-                cursor: isGenerating ? "not-allowed" : "pointer",
+                cursor: isGenerating || selectedInjuries.length === 0 ? "not-allowed" : "pointer",
                 borderRadius: "4px",
-                opacity: isGenerating ? 0.7 : 1
+                opacity: isGenerating || selectedInjuries.length === 0 ? 0.7 : 1
               }}
             >
               {isGenerating ? "Generating Plan..." : "Generate Recovery Plan"}
             </button>
             <p style={{ color: "#666", fontSize: "0.9rem", marginTop: "0.5rem" }}>
-              This will create a personalized weekly exercise plan based on your injuries.
+              This will create a personalized weekly exercise plan based on your selected injuries.
             </p>
           </div>
 
