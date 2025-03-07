@@ -8,6 +8,9 @@ import AddInjury from "./components/AddInjury";
 import TalkWithPT from "./components/TalkWithPT";
 import Login from "./components/Login";
 import { supabase } from "./supabaseClient"; // Import the centralized client
+import BodyHighlighter from 'react-body-highlighter';
+import 'react-body-highlighter/dist/index.css';
+
 
 import "./App.css";
 
