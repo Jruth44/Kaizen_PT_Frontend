@@ -1,6 +1,7 @@
 // InjuryQuestionnaireForm.js
 import React, { useState } from "react";
 import { submitInjuryQuestionnaire } from "../services/api";
+import BodyMap from "./BodyMap";
 
 function InjuryQuestionnaireForm({ selectedPatient }) {
   const [formData, setFormData] = useState({
@@ -292,9 +293,517 @@ function InjuryQuestionnaireForm({ selectedPatient }) {
             </div>
           </fieldset>
         );
+      case "Hip":
+        return (
+          <fieldset style={{ margin: "1rem 0", padding: "1rem", border: "1px solid #ccc" }}>
+            <legend style={{ fontWeight: "bold" }}>Hip-Specific Tests</legend>
+            <p style={{ fontSize: "0.9rem", color: "#666", marginBottom: "1rem" }}>
+              These tests help identify hip-related conditions such as labral tears, impingement, or bursitis.
+            </p>
+
+            <div style={{ marginBottom: "0.5rem" }}>
+              <label style={{ display: "block", fontWeight: "bold" }}>
+                FADIR Test (Flexion, Adduction, Internal Rotation)
+              </label>
+              <small style={{ color: "#555" }}>
+                Tests for hip impingement or labral tears. Pain with flexed hip being adducted and internally rotated.
+              </small>
+              <br />
+              <label style={{ marginTop: "0.3rem" }}>
+                Positive?
+                <input
+                  type="checkbox"
+                  style={{ marginLeft: "0.5rem" }}
+                  checked={formData.specialized_data.special_tests.fadir}
+                  onChange={() => handleSpecialTestChange("fadir")}
+                />
+              </label>
+            </div>
+
+            <div style={{ marginBottom: "0.5rem" }}>
+              <label style={{ display: "block", fontWeight: "bold" }}>Trendelenburg Test</label>
+              <small style={{ color: "#555" }}>
+                Tests for hip abductor weakness. Standing on one leg, if the pelvis drops on the non-stance side.
+              </small>
+              <br />
+              <label style={{ marginTop: "0.3rem" }}>
+                Positive?
+                <input
+                  type="checkbox"
+                  style={{ marginLeft: "0.5rem" }}
+                  checked={formData.specialized_data.special_tests.trendelenburg}
+                  onChange={() => handleSpecialTestChange("trendelenburg")}
+                />
+              </label>
+            </div>
+
+            <hr style={{ margin: "1rem 0" }} />
+
+            <label style={{ display: "block", marginBottom: "0.5rem", fontWeight: "bold" }}>
+              Hip Range of Motion
+            </label>
+            <div style={{ display: "flex", gap: "1rem", marginTop: "0.5rem", flexWrap: "wrap" }}>
+              <div>
+                <label>Flexion (°):</label>
+                <input
+                  type="number"
+                  value={formData.specialized_data.joint_angles.flexion}
+                  onChange={(e) => handleAngleChange("flexion", e.target.value)}
+                  style={{ width: "80px", marginLeft: "0.5rem" }}
+                />
+              </div>
+              <div>
+                <label>Internal Rotation (°):</label>
+                <input
+                  type="number"
+                  value={formData.specialized_data.joint_angles.internal_rotation}
+                  onChange={(e) => handleAngleChange("internal_rotation", e.target.value)}
+                  style={{ width: "80px", marginLeft: "0.5rem" }}
+                />
+              </div>
+              <div>
+                <label>External Rotation (°):</label>
+                <input
+                  type="number"
+                  value={formData.specialized_data.joint_angles.external_rotation}
+                  onChange={(e) => handleAngleChange("external_rotation", e.target.value)}
+                  style={{ width: "80px", marginLeft: "0.5rem" }}
+                />
+              </div>
+            </div>
+          </fieldset>
+        );
+      case "Back":
+        return (
+          <fieldset style={{ margin: "1rem 0", padding: "1rem", border: "1px solid #ccc" }}>
+            <legend style={{ fontWeight: "bold" }}>Back-Specific Tests</legend>
+            <p style={{ fontSize: "0.9rem", color: "#666", marginBottom: "1rem" }}>
+              These tests help identify spinal conditions, disc issues, or nerve impingement.
+            </p>
+
+            <div style={{ marginBottom: "0.5rem" }}>
+              <label style={{ display: "block", fontWeight: "bold" }}>
+                Straight Leg Raise
+              </label>
+              <small style={{ color: "#555" }}>
+                Tests for disc herniation and sciatic nerve irritation. Lie on back while examiner lifts straightened leg.
+              </small>
+              <br />
+              <label style={{ marginTop: "0.3rem" }}>
+                Positive?
+                <input
+                  type="checkbox"
+                  style={{ marginLeft: "0.5rem" }}
+                  checked={formData.specialized_data.special_tests.straight_leg_raise}
+                  onChange={() => handleSpecialTestChange("straight_leg_raise")}
+                />
+              </label>
+            </div>
+
+            <div style={{ marginBottom: "0.5rem" }}>
+              <label style={{ display: "block", fontWeight: "bold" }}>Slump Test</label>
+              <small style={{ color: "#555" }}>
+                Tests for nerve root irritation. Sitting with knees and hips flexed, neck flexed, then extending knee.
+              </small>
+              <br />
+              <label style={{ marginTop: "0.3rem" }}>
+                Positive?
+                <input
+                  type="checkbox"
+                  style={{ marginLeft: "0.5rem" }}
+                  checked={formData.specialized_data.special_tests.slump_test}
+                  onChange={() => handleSpecialTestChange("slump_test")}
+                />
+              </label>
+            </div>
+
+            <div style={{ marginBottom: "0.5rem" }}>
+              <label style={{ display: "block", fontWeight: "bold" }}>Centralization/Peripheralization</label>
+              <small style={{ color: "#555" }}>
+                During movement testing, does your pain move toward the center of your back (centralization) or away toward extremities (peripheralization)?
+              </small>
+              <br />
+              <div style={{ marginTop: "0.5rem" }}>
+                <select
+                  value={formData.specialized_data.special_tests.centralization || ""}
+                  onChange={(e) => {
+                    setFormData(prev => ({
+                      ...prev,
+                      specialized_data: {
+                        ...prev.specialized_data,
+                        special_tests: {
+                          ...prev.specialized_data.special_tests,
+                          centralization: e.target.value
+                        }
+                      }
+                    }));
+                  }}
+                  style={{ padding: "0.3rem", borderRadius: "4px", border: "1px solid #ccc" }}
+                >
+                  <option value="">Select response</option>
+                  <option value="centralization">Centralization (improved)</option>
+                  <option value="peripheralization">Peripheralization (worse)</option>
+                  <option value="no_change">No change</option>
+                </select>
+              </div>
+            </div>
+          </fieldset>
+        );
+      case "Neck":
+        return (
+          <fieldset style={{ margin: "1rem 0", padding: "1rem", border: "1px solid #ccc" }}>
+            <legend style={{ fontWeight: "bold" }}>Neck-Specific Tests</legend>
+            <p style={{ fontSize: "0.9rem", color: "#666", marginBottom: "1rem" }}>
+              These tests help identify cervical spine conditions, nerve impingement, or vascular issues.
+            </p>
+
+            <div style={{ marginBottom: "0.5rem" }}>
+              <label style={{ display: "block", fontWeight: "bold" }}>
+                Spurling's Test
+              </label>
+              <small style={{ color: "#555" }}>
+                Tests for nerve root compression. Head tilted to affected side with downward pressure.
+              </small>
+              <br />
+              <label style={{ marginTop: "0.3rem" }}>
+                Positive?
+                <input
+                  type="checkbox"
+                  style={{ marginLeft: "0.5rem" }}
+                  checked={formData.specialized_data.special_tests.spurlings}
+                  onChange={() => handleSpecialTestChange("spurlings")}
+                />
+              </label>
+            </div>
+
+            <div style={{ marginBottom: "0.5rem" }}>
+              <label style={{ display: "block", fontWeight: "bold" }}>Upper Limb Tension Test</label>
+              <small style={{ color: "#555" }}>
+                Tests for nerve impingement affecting the arm. Arm positioned in specific way to tension nerves.
+              </small>
+              <br />
+              <label style={{ marginTop: "0.3rem" }}>
+                Positive?
+                <input
+                  type="checkbox"
+                  style={{ marginLeft: "0.5rem" }}
+                  checked={formData.specialized_data.special_tests.upper_limb_tension}
+                  onChange={() => handleSpecialTestChange("upper_limb_tension")}
+                />
+              </label>
+            </div>
+
+            <hr style={{ margin: "1rem 0" }} />
+
+            <label style={{ display: "block", marginBottom: "0.5rem", fontWeight: "bold" }}>
+              Neck Range of Motion
+            </label>
+            <div style={{ display: "flex", gap: "1rem", marginTop: "0.5rem", flexWrap: "wrap" }}>
+              <div>
+                <label>Flexion (°):</label>
+                <input
+                  type="number"
+                  value={formData.specialized_data.joint_angles.flexion}
+                  onChange={(e) => handleAngleChange("flexion", e.target.value)}
+                  style={{ width: "80px", marginLeft: "0.5rem" }}
+                />
+              </div>
+              <div>
+                <label>Extension (°):</label>
+                <input
+                  type="number"
+                  value={formData.specialized_data.joint_angles.extension}
+                  onChange={(e) => handleAngleChange("extension", e.target.value)}
+                  style={{ width: "80px", marginLeft: "0.5rem" }}
+                />
+              </div>
+              <div>
+                <label>Rotation (°):</label>
+                <input
+                  type="number"
+                  value={formData.specialized_data.joint_angles.rotation}
+                  onChange={(e) => handleAngleChange("rotation", e.target.value)}
+                  style={{ width: "80px", marginLeft: "0.5rem" }}
+                />
+              </div>
+            </div>
+          </fieldset>
+        );
+      case "Ankle":
+        return (
+          <fieldset style={{ margin: "1rem 0", padding: "1rem", border: "1px solid #ccc" }}>
+            <legend style={{ fontWeight: "bold" }}>Ankle-Specific Tests</legend>
+            <p style={{ fontSize: "0.9rem", color: "#666", marginBottom: "1rem" }}>
+              These tests help identify ankle ligament injuries, instability, or other conditions.
+            </p>
+
+            <div style={{ marginBottom: "0.5rem" }}>
+              <label style={{ display: "block", fontWeight: "bold" }}>
+                Anterior Drawer Test
+              </label>
+              <small style={{ color: "#555" }}>
+                Tests for anterior talofibular ligament injury. Forward pressure on the heel with ankle in slight plantar flexion.
+              </small>
+              <br />
+              <label style={{ marginTop: "0.3rem" }}>
+                Positive?
+                <input
+                  type="checkbox"
+                  style={{ marginLeft: "0.5rem" }}
+                  checked={formData.specialized_data.special_tests.ankle_anterior_drawer}
+                  onChange={() => handleSpecialTestChange("ankle_anterior_drawer")}
+                />
+              </label>
+            </div>
+
+            <div style={{ marginBottom: "0.5rem" }}>
+              <label style={{ display: "block", fontWeight: "bold" }}>Talar Tilt Test</label>
+              <small style={{ color: "#555" }}>
+                Tests for calcaneofibular ligament injury. Inversion stress to the ankle.
+              </small>
+              <br />
+              <label style={{ marginTop: "0.3rem" }}>
+                Positive?
+                <input
+                  type="checkbox"
+                  style={{ marginLeft: "0.5rem" }}
+                  checked={formData.specialized_data.special_tests.talar_tilt}
+                  onChange={() => handleSpecialTestChange("talar_tilt")}
+                />
+              </label>
+            </div>
+
+            <div style={{ marginBottom: "0.5rem" }}>
+              <label style={{ display: "block", fontWeight: "bold" }}>Thompson Test</label>
+              <small style={{ color: "#555" }}>
+                Tests for Achilles tendon rupture. Squeeze the calf muscle with the patient kneeling.
+              </small>
+              <br />
+              <label style={{ marginTop: "0.3rem" }}>
+                Positive?
+                <input
+                  type="checkbox"
+                  style={{ marginLeft: "0.5rem" }}
+                  checked={formData.specialized_data.special_tests.thompson}
+                  onChange={() => handleSpecialTestChange("thompson")}
+                />
+              </label>
+            </div>
+
+            <hr style={{ margin: "1rem 0" }} />
+
+            <label style={{ display: "block", marginBottom: "0.5rem", fontWeight: "bold" }}>
+              Ankle Range of Motion
+            </label>
+            <div style={{ display: "flex", gap: "1rem", marginTop: "0.5rem", flexWrap: "wrap" }}>
+              <div>
+                <label>Dorsiflexion (°):</label>
+                <input
+                  type="number"
+                  value={formData.specialized_data.joint_angles.dorsiflexion}
+                  onChange={(e) => handleAngleChange("dorsiflexion", e.target.value)}
+                  style={{ width: "80px", marginLeft: "0.5rem" }}
+                />
+              </div>
+              <div>
+                <label>Plantarflexion (°):</label>
+                <input
+                  type="number"
+                  value={formData.specialized_data.joint_angles.plantarflexion}
+                  onChange={(e) => handleAngleChange("plantarflexion", e.target.value)}
+                  style={{ width: "80px", marginLeft: "0.5rem" }}
+                />
+              </div>
+            </div>
+          </fieldset>
+        );
+      case "Wrist":
+        return (
+          <fieldset style={{ margin: "1rem 0", padding: "1rem", border: "1px solid #ccc" }}>
+            <legend style={{ fontWeight: "bold" }}>Wrist-Specific Tests</legend>
+            <p style={{ fontSize: "0.9rem", color: "#666", marginBottom: "1rem" }}>
+              These tests help identify wrist conditions such as carpal tunnel syndrome, ligament injuries, or tendonitis.
+            </p>
+
+            <div style={{ marginBottom: "0.5rem" }}>
+              <label style={{ display: "block", fontWeight: "bold" }}>
+                Phalen's Test
+              </label>
+              <small style={{ color: "#555" }}>
+                Tests for carpal tunnel syndrome. Flex both wrists and press the backs of hands together for 1 minute.
+              </small>
+              <br />
+              <label style={{ marginTop: "0.3rem" }}>
+                Positive?
+                <input
+                  type="checkbox"
+                  style={{ marginLeft: "0.5rem" }}
+                  checked={formData.specialized_data.special_tests.phalens}
+                  onChange={() => handleSpecialTestChange("phalens")}
+                />
+              </label>
+            </div>
+
+            <div style={{ marginBottom: "0.5rem" }}>
+              <label style={{ display: "block", fontWeight: "bold" }}>Finkelstein Test</label>
+              <small style={{ color: "#555" }}>
+                Tests for De Quervain's tenosynovitis. Make a fist with thumb inside and bend wrist toward pinky side.
+              </small>
+              <br />
+              <label style={{ marginTop: "0.3rem" }}>
+                Positive?
+                <input
+                  type="checkbox"
+                  style={{ marginLeft: "0.5rem" }}
+                  checked={formData.specialized_data.special_tests.finkelstein}
+                  onChange={() => handleSpecialTestChange("finkelstein")}
+                />
+              </label>
+            </div>
+
+            <hr style={{ margin: "1rem 0" }} />
+
+            <label style={{ display: "block", marginBottom: "0.5rem", fontWeight: "bold" }}>
+              Wrist Range of Motion
+            </label>
+            <div style={{ display: "flex", gap: "1rem", marginTop: "0.5rem", flexWrap: "wrap" }}>
+              <div>
+                <label>Flexion (°):</label>
+                <input
+                  type="number"
+                  value={formData.specialized_data.joint_angles.flexion}
+                  onChange={(e) => handleAngleChange("flexion", e.target.value)}
+                  style={{ width: "80px", marginLeft: "0.5rem" }}
+                />
+              </div>
+              <div>
+                <label>Extension (°):</label>
+                <input
+                  type="number"
+                  value={formData.specialized_data.joint_angles.extension}
+                  onChange={(e) => handleAngleChange("extension", e.target.value)}
+                  style={{ width: "80px", marginLeft: "0.5rem" }}
+                />
+              </div>
+            </div>
+          </fieldset>
+        );
+      case "Elbow":
+        return (
+          <fieldset style={{ margin: "1rem 0", padding: "1rem", border: "1px solid #ccc" }}>
+            <legend style={{ fontWeight: "bold" }}>Elbow-Specific Tests</legend>
+            <p style={{ fontSize: "0.9rem", color: "#666", marginBottom: "1rem" }}>
+              These tests help identify tennis elbow, golfer's elbow, or other elbow conditions.
+            </p>
+
+            <div style={{ marginBottom: "0.5rem" }}>
+              <label style={{ display: "block", fontWeight: "bold" }}>
+                Cozen's Test (Tennis Elbow)
+              </label>
+              <small style={{ color: "#555" }}>
+                Tests for lateral epicondylitis. Make a fist and extend wrist while examiner resists.
+              </small>
+              <br />
+              <label style={{ marginTop: "0.3rem" }}>
+                Positive?
+                <input
+                  type="checkbox"
+                  style={{ marginLeft: "0.5rem" }}
+                  checked={formData.specialized_data.special_tests.cozens}
+                  onChange={() => handleSpecialTestChange("cozens")}
+                />
+              </label>
+            </div>
+
+            <div style={{ marginBottom: "0.5rem" }}>
+              <label style={{ display: "block", fontWeight: "bold" }}>Golfer's Elbow Test</label>
+              <small style={{ color: "#555" }}>
+                Tests for medial epicondylitis. Wrist flexion against resistance.
+              </small>
+              <br />
+              <label style={{ marginTop: "0.3rem" }}>
+                Positive?
+                <input
+                  type="checkbox"
+                  style={{ marginLeft: "0.5rem" }}
+                  checked={formData.specialized_data.special_tests.golfers_elbow}
+                  onChange={() => handleSpecialTestChange("golfers_elbow")}
+                />
+              </label>
+            </div>
+
+            <div style={{ marginBottom: "0.5rem" }}>
+              <label style={{ display: "block", fontWeight: "bold" }}>Valgus Stress Test</label>
+              <small style={{ color: "#555" }}>
+                Tests for medial collateral ligament injury. Apply outward pressure to elbow.
+              </small>
+              <br />
+              <label style={{ marginTop: "0.3rem" }}>
+                Positive?
+                <input
+                  type="checkbox"
+                  style={{ marginLeft: "0.5rem" }}
+                  checked={formData.specialized_data.special_tests.valgus_stress}
+                  onChange={() => handleSpecialTestChange("valgus_stress")}
+                />
+              </label>
+            </div>
+
+            <hr style={{ margin: "1rem 0" }} />
+
+            <label style={{ display: "block", marginBottom: "0.5rem", fontWeight: "bold" }}>
+              Elbow Range of Motion
+            </label>
+            <div style={{ display: "flex", gap: "1rem", marginTop: "0.5rem", flexWrap: "wrap" }}>
+              <div>
+                <label>Flexion (°):</label>
+                <input
+                  type="number"
+                  value={formData.specialized_data.joint_angles.flexion}
+                  onChange={(e) => handleAngleChange("flexion", e.target.value)}
+                  style={{ width: "80px", marginLeft: "0.5rem" }}
+                />
+              </div>
+              <div>
+                <label>Extension (°):</label>
+                <input
+                  type="number"
+                  value={formData.specialized_data.joint_angles.extension}
+                  onChange={(e) => handleAngleChange("extension", e.target.value)}
+                  style={{ width: "80px", marginLeft: "0.5rem" }}
+                />
+              </div>
+              <div>
+                <label>Supination (°):</label>
+                <input
+                  type="number"
+                  value={formData.specialized_data.joint_angles.supination}
+                  onChange={(e) => handleAngleChange("supination", e.target.value)}
+                  style={{ width: "80px", marginLeft: "0.5rem" }}
+                />
+              </div>
+              <div>
+                <label>Pronation (°):</label>
+                <input
+                  type="number"
+                  value={formData.specialized_data.joint_angles.pronation}
+                  onChange={(e) => handleAngleChange("pronation", e.target.value)}
+                  style={{ width: "80px", marginLeft: "0.5rem" }}
+                />
+              </div>
+            </div>
+          </fieldset>
+        );
       default:
         return null;
     }
+  };
+
+  const handleBodyPartSelect = (bodyPart) => {
+    setFormData(prev => ({
+      ...prev,
+      body_part: bodyPart
+    }));
   };
 
   return (
@@ -317,6 +826,14 @@ function InjuryQuestionnaireForm({ selectedPatient }) {
           {error}
         </div>
       )}
+      
+      <div style={{ marginBottom: "2rem" }}>
+        <h3>Select Body Region</h3>
+        <p style={{ fontSize: "0.9rem", color: "#666", marginBottom: "1rem" }}>
+          Click on the body map to select the affected area, or use the dropdown below.
+        </p>
+        <BodyMap selectedBodyPart={formData.body_part} onSelectBodyPart={handleBodyPartSelect} />
+      </div>
 
       <form onSubmit={handleSubmit} style={{ marginTop: "1rem" }}>
         {/* Body Part */}
