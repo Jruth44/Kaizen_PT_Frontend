@@ -2,8 +2,8 @@
 import React, { useState } from "react";
 import { submitInjuryQuestionnaire } from "../services/api";
 
-// Updated import: now using your new BodyMap with react-body-highlighter
-import BodyMap from "./BodyMap";
+// Import the new BodyPartSelector instead of BodyMap
+import BodyPartSelector from "./BodyPartSelector";
 
 import BasicInfoFields from "./BasicInfoFields";
 import SecondaryInfoFields from "./SecondaryInfoFields";
@@ -30,7 +30,7 @@ function InjuryQuestionnaireForm({ selectedPatient }) {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Handle body part selection from the (new) BodyMap
+  // Handle body part selection
   const handleBodyPartSelect = (bodyPart) => {
     setFormData((prev) => ({
       ...prev,
@@ -82,6 +82,11 @@ function InjuryQuestionnaireForm({ selectedPatient }) {
     }));
   };
 
+  // Handle select changes for special tests
+  const handleSelectChange = (e, fieldName) => {
+    handleSpecialTestChange(fieldName, e.target.value);
+  };
+
   // Form submission handler
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -106,7 +111,7 @@ function InjuryQuestionnaireForm({ selectedPatient }) {
       // Handle error messages more gracefully
       if (err.response) {
         setError(
-          `Error: ${err.response.data.detail || "Server error occurred"}`
+          `Error: ${err.response.data?.detail || "Server error occurred"}`
         );
       } else if (err.request) {
         setError(
@@ -125,7 +130,7 @@ function InjuryQuestionnaireForm({ selectedPatient }) {
       </h2>
       <p style={{ fontSize: "0.9rem", color: "#666", marginBottom: "1.5rem" }}>
         Please fill out the questions below to help us (and our AI) understand
-        your current injury. Don&apos;t worry if you&apos;re unsure about any
+        your current injury. Don't worry if you're unsure about any
         tests or technical details—just fill in what you can!
       </p>
 
@@ -146,16 +151,9 @@ function InjuryQuestionnaireForm({ selectedPatient }) {
         </div>
       )}
 
-      {/* Interactive Body Map */}
+      {/* Body Part Selector Dropdown - replacing the interactive Body Map */}
       <div style={{ marginBottom: "2rem" }}>
-        <h3 style={{ color: "#3c63a7", marginBottom: "1rem" }}>
-          Select Body Region
-        </h3>
-        <p style={{ fontSize: "0.9rem", color: "#666", marginBottom: "1rem" }}>
-          Click on the body map to select the area where you&apos;re
-          experiencing pain.
-        </p>
-        <BodyMap
+        <BodyPartSelector
           selectedBodyPart={formData.body_part}
           onSelectBodyPart={handleBodyPartSelect}
         />
@@ -171,7 +169,7 @@ function InjuryQuestionnaireForm({ selectedPatient }) {
           boxShadow: "0 2px 10px rgba(0,0,0,0.05)",
         }}
       >
-        {/* The body_part is tracked via the BodyMap above, but we store it in hidden input too */}
+        {/* The body_part is tracked via the selector above, but we store it in hidden input too */}
         <input type="hidden" name="body_part" value={formData.body_part} />
 
         <div style={{ marginBottom: "2rem" }}>
@@ -208,6 +206,7 @@ function InjuryQuestionnaireForm({ selectedPatient }) {
           specializedData={formData.specialized_data}
           onSpecialTestChange={handleSpecialTestChange}
           onAngleChange={handleAngleChange}
+          handleSelectChange={handleSelectChange}
         />
 
         {/* Submit Button */}
