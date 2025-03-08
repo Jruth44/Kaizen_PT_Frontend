@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { submitInjuryQuestionnaire } from "../services/api";
 
-// Import the new BodyPartSelector instead of BodyMap
+// Import the BodyPartSelector instead of BodyMap
 import BodyPartSelector from "./BodyPartSelector";
 
 import BasicInfoFields from "./BasicInfoFields";
@@ -23,11 +23,54 @@ function InjuryQuestionnaireForm({ selectedPatient }) {
   const [diagnosisResult, setDiagnosisResult] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
+  const [formErrors, setFormErrors] = useState({});
+
+  // Form validation function
+  const validateForm = () => {
+    const errors = {};
+    
+    // Required fields validation
+    if (!formData.hurting_description.trim()) {
+      errors.hurting_description = "Please describe where it hurts and how it feels";
+    }
+    
+    if (!formData.date_of_onset.trim()) {
+      errors.date_of_onset = "Please provide when the injury started";
+    }
+    
+    if (!formData.what_makes_it_worse.trim()) {
+      errors.what_makes_it_worse = "Please describe what makes it worse";
+    }
+    
+    if (!formData.what_makes_it_better.trim()) {
+      errors.what_makes_it_better = "Please describe what makes it better";
+    }
+    
+    if (!formData.mechanism_of_injury.trim()) {
+      errors.mechanism_of_injury = "Please describe how the injury happened";
+    }
+    
+    if (!formData.nature_of_pain.trim()) {
+      errors.nature_of_pain = "Please describe the nature of pain";
+    }
+    
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
 
   // Handle input changes for standard fields
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+    
+    // Clear error for this field if it exists
+    if (formErrors[name]) {
+      setFormErrors(prev => {
+        const newErrors = {...prev};
+        delete newErrors[name];
+        return newErrors;
+      });
+    }
   };
 
   // Handle body part selection
@@ -90,6 +133,18 @@ function InjuryQuestionnaireForm({ selectedPatient }) {
   // Form submission handler
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Validate form before submission
+    if (!validateForm()) {
+      const firstErrorField = Object.keys(formErrors)[0];
+      const errorElement = document.getElementsByName(firstErrorField)[0];
+      if (errorElement) {
+        errorElement.scrollIntoView({ behavior: "smooth", block: "center" });
+        errorElement.focus();
+      }
+      return;
+    }
+    
     setIsSubmitting(true);
     setError(null);
 
@@ -121,6 +176,22 @@ function InjuryQuestionnaireForm({ selectedPatient }) {
         setError(`Error: ${err.message}`);
       }
     }
+  };
+
+  // Helper to render field error message
+  const renderError = (fieldName) => {
+    if (formErrors[fieldName]) {
+      return (
+        <div style={{ 
+          color: "#dc3545", 
+          fontSize: "0.875rem", 
+          marginTop: "0.25rem" 
+        }}>
+          {formErrors[fieldName]}
+        </div>
+      );
+    }
+    return null;
   };
 
   return (
@@ -193,12 +264,22 @@ function InjuryQuestionnaireForm({ selectedPatient }) {
 
         {/* Basic Information Fields */}
         <BasicInfoFields formData={formData} handleChange={handleChange} />
+        
+        {/* Display form validation errors */}
+        {renderError('hurting_description')}
+        {renderError('date_of_onset')}
+        {renderError('what_makes_it_worse')}
+        {renderError('what_makes_it_better')}
+        {renderError('mechanism_of_injury')}
 
         {/* Pain Rating Scale */}
         <PainRatingScale painRatings={formData} handleChange={handleChange} />
 
         {/* Secondary Information Fields */}
         <SecondaryInfoFields formData={formData} handleChange={handleChange} />
+        
+        {/* Display form validation error */}
+        {renderError('nature_of_pain')}
 
         {/* Specialized Tests (conditional based on body_part) */}
         <SpecializedTests
@@ -232,7 +313,20 @@ function InjuryQuestionnaireForm({ selectedPatient }) {
           }}
           disabled={isSubmitting}
         >
-          {isSubmitting ? "Submitting..." : "Save My Injury Information"}
+          {isSubmitting ? (
+            <>
+              <span style={{ display: "inline-block", marginRight: "10px" }}>
+                <div className="loading-text">
+                  <span className="dot"></span>
+                  <span className="dot"></span>
+                  <span className="dot"></span>
+                </div>
+              </span>
+              Submitting...
+            </>
+          ) : (
+            "Save My Injury Information"
+          )}
         </button>
       </form>
 

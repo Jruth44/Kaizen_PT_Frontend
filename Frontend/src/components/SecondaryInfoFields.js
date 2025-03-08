@@ -1,6 +1,28 @@
 import React from 'react';
 
 const SecondaryInfoFields = ({ formData, handleChange }) => {
+  // Helper function to sanitize input and prevent script injection
+  const sanitizeInput = (value) => {
+    // Basic sanitization - remove HTML tags and script elements
+    return value.replace(/<\/?[^>]+(>|$)/g, "");
+  };
+
+  // Enhanced handler to sanitize inputs
+  const handleSanitizedChange = (e) => {
+    const { name, value } = e.target;
+    const sanitizedValue = sanitizeInput(value);
+    
+    // Create a synthetic event with sanitized value
+    const sanitizedEvent = {
+      target: {
+        name: name,
+        value: sanitizedValue
+      }
+    };
+    
+    handleChange(sanitizedEvent);
+  };
+
   return (
     <div>
       {/* Nature, Stage, Stability */}
@@ -9,7 +31,7 @@ const SecondaryInfoFields = ({ formData, handleChange }) => {
         <textarea
           name="irritability_factors"
           value={formData.irritability_factors}
-          onChange={handleChange}
+          onChange={handleSanitizedChange}
           placeholder="What activities or movements quickly aggravate your symptoms?"
           style={{ 
             width: "100%", 
@@ -27,7 +49,7 @@ const SecondaryInfoFields = ({ formData, handleChange }) => {
         <textarea
           name="nature_of_pain"
           value={formData.nature_of_pain}
-          onChange={handleChange}
+          onChange={handleSanitizedChange}
           placeholder="E.g. Clicking, sharp, throbbing, burning..."
           style={{ 
             width: "100%", 
