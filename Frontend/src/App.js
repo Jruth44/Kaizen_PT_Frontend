@@ -10,6 +10,7 @@ import Login from "./components/Login";
 import { supabase } from "./supabaseClient";
 
 import "./App.css";
+import "./components/TalkWithPT.css";
 
 function App() {
   const [selectedPage, setSelectedPage] = useState("CurrentRecoveryPlan");
