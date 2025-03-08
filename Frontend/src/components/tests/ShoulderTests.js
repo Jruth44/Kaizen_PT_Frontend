@@ -3,20 +3,24 @@ import React from 'react';
 const ShoulderTests = ({ specializedData, onSpecialTestChange, onAngleChange }) => {
   return (
     <fieldset style={{ margin: "1rem 0", padding: "1rem", border: "1px solid #ccc", borderRadius: "8px", backgroundColor: "#f9f9f9" }}>
-      <legend style={{ fontWeight: "bold", padding: "0 10px", color: "#3c63a7" }}>Shoulder-Specific Tests</legend>
+      <legend style={{ fontWeight: "bold", padding: "0 10px", color: "#3c63a7" }}>Shoulder Self-Assessment Tests</legend>
       <p style={{ fontSize: "0.9rem", color: "#666", marginBottom: "1rem" }}>
-        These tests help identify shoulder impingement or rotator cuff issues. 
-        Check the box if the test reproduces your pain.
+        These self-assessment tests can help identify potential shoulder issues. Follow each instruction carefully and check the box if you experience pain.
       </p>
 
       <div style={{ marginBottom: "0.5rem" }}>
         <label style={{ display: "block", fontWeight: "bold" }}>
-          Hawkins-Kennedy Test
+          Painful Arc Test
         </label>
         <small style={{ color: "#555" }}>
-          Instructions: Flex the shoulder and elbow to 90°, then rotate your arm
-          internally. A sharp pain in the front of your shoulder often indicates a 
-          "positive" test.
+          <ol style={{ paddingLeft: "1.5rem", marginTop: "0.5rem" }}>
+            <li>Stand in front of a mirror with your arm relaxed at your side.</li>
+            <li>Slowly raise your arm out to the side, palm facing down.</li>
+            <li>Continue raising your arm in a smooth motion as high as possible.</li>
+            <li>Lower your arm back down in the same path.</li>
+            <li>Note if you experience pain between approximately 60-120 degrees of elevation (midway through the movement).</li>
+          </ol>
+          A painful arc during this range suggests potential rotator cuff or impingement issues.
         </small>
         <br />
         <label style={{ marginTop: "0.3rem", display: "flex", alignItems: "center" }}>
@@ -26,15 +30,20 @@ const ShoulderTests = ({ specializedData, onSpecialTestChange, onAngleChange }) 
             checked={specializedData.special_tests.hawkins_kennedy}
             onChange={() => onSpecialTestChange("hawkins_kennedy")}
           />
-          Positive Test Result
+          Experienced Pain During Test
         </label>
       </div>
 
       <div style={{ marginBottom: "0.5rem" }}>
-        <label style={{ display: "block", fontWeight: "bold" }}>Neer Test</label>
+        <label style={{ display: "block", fontWeight: "bold" }}>Active Shoulder Flexion Test</label>
         <small style={{ color: "#555" }}>
-          Instructions: Fully raise (forward flex) your arm. If it causes pain near the top 
-          of the shoulder, this could indicate impingement.
+          <ol style={{ paddingLeft: "1.5rem", marginTop: "0.5rem" }}>
+            <li>Stand with your arm relaxed at your side.</li>
+            <li>Slowly raise your arm forward and upward as high as possible.</li>
+            <li>Note if you experience pain, particularly at the top of the movement.</li>
+            <li>Lower your arm back down slowly.</li>
+          </ol>
+          Pain during this movement, especially near the top, may indicate impingement or rotator cuff issues.
         </small>
         <br />
         <label style={{ marginTop: "0.3rem", display: "flex", alignItems: "center" }}>
@@ -44,16 +53,21 @@ const ShoulderTests = ({ specializedData, onSpecialTestChange, onAngleChange }) 
             checked={specializedData.special_tests.neer}
             onChange={() => onSpecialTestChange("neer")}
           />
-          Positive Test Result
+          Experienced Pain During Test
         </label>
       </div>
 
       <div>
-        <label style={{ display: "block", fontWeight: "bold" }}>Empty Can Test</label>
+        <label style={{ display: "block", fontWeight: "bold" }}>Resisted External Rotation Test</label>
         <small style={{ color: "#555" }}>
-          Instructions: Lift your arms straight forward at shoulder height, thumbs pointing 
-          down (like emptying a can). Push up against resistance. Pain or weakness may 
-          indicate rotator cuff strain.
+          <ol style={{ paddingLeft: "1.5rem", marginTop: "0.5rem" }}>
+            <li>Stand with your elbow bent at 90 degrees and tucked close to your side.</li>
+            <li>Position your forearm across your abdomen.</li>
+            <li>Try to rotate your forearm outward against resistance (you can use a doorframe or sturdy furniture).</li>
+            <li>Alternatively, use your other hand to provide resistance.</li>
+            <li>Note if you experience pain with this resistance.</li>
+          </ol>
+          Pain during this resistance test may indicate infraspinatus or teres minor issues.
         </small>
         <br />
         <label style={{ marginTop: "0.3rem", display: "flex", alignItems: "center" }}>
@@ -63,22 +77,22 @@ const ShoulderTests = ({ specializedData, onSpecialTestChange, onAngleChange }) 
             checked={specializedData.special_tests.empty_can}
             onChange={() => onSpecialTestChange("empty_can")}
           />
-          Positive Test Result
+          Experienced Pain During Test
         </label>
       </div>
 
       <hr style={{ margin: "1rem 0" }} />
 
       <label style={{ display: "block", marginBottom: "0.5rem", fontWeight: "bold" }}>
-        Shoulder Range of Motion
+        Shoulder Range of Motion Self-Assessment
       </label>
       <small style={{ color: "#555" }}>
-        If you've measured or estimated your range (in degrees), enter it below. 
-        Otherwise, feel free to leave these blank.
+        Using a smartphone app (search for "goniometer app") or simply observing in a mirror, estimate your range of motion in degrees.
+        Normal shoulder flexion is around 180° and abduction around 180°.
       </small>
       <div style={{ display: "flex", gap: "1rem", marginTop: "0.5rem" }}>
         <div>
-          <label>Flexion (°):</label>
+          <label>Forward Elevation (°):</label>
           <input
             type="number"
             value={specializedData.joint_angles.flexion}
@@ -87,7 +101,7 @@ const ShoulderTests = ({ specializedData, onSpecialTestChange, onAngleChange }) 
           />
         </div>
         <div>
-          <label>Abduction (°):</label>
+          <label>Side Elevation (°):</label>
           <input
             type="number"
             value={specializedData.joint_angles.abduction}
