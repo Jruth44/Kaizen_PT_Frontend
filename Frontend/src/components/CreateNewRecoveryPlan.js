@@ -1,3 +1,4 @@
+// src/components/CreateNewRecoveryPlan.js
 import React, { useState, useEffect } from "react";
 import { getPatientInjuries, generateRecoveryPlan, getWeeklySchedule, deletePatientInjury } from "../services/api";
 
@@ -10,7 +11,7 @@ function CreateNewRecoveryPlan({ userEmail }) {
   const [deleteConfirmation, setDeleteConfirmation] = useState({ show: false, index: null });
 
   useEffect(() => {
-    // Fetch injuries when the component mounts or when userEmail changes.
+    // Fetch injuries when the component mounts or when userEmail changes
     if (userEmail) {
       fetchInjuries();
       fetchRecoveryPlan();
@@ -52,8 +53,6 @@ function CreateNewRecoveryPlan({ userEmail }) {
     setIsGenerating(true);
     setError(null);
     try {
-      // In a full implementation, we would pass selectedInjuries to the backend
-      // For now, we'll just generate based on all injuries
       const plan = await generateRecoveryPlan(userEmail);
       setRecoveryPlan(plan);
       setIsGenerating(false);
@@ -97,48 +96,33 @@ function CreateNewRecoveryPlan({ userEmail }) {
 
   return (
     <div>
-      <h3>Create a New Recovery Plan</h3>
-      <p>
-        Viewing injury assessments for <strong>{userEmail}</strong>.
-      </p>
+      <div className="page-header">
+        <h2>Create a New Recovery Plan</h2>
+        <p className="text-muted">
+          Viewing injury assessments for <strong>{userEmail}</strong>
+        </p>
+      </div>
       
       {error && (
-        <div style={{ 
-          padding: "0.75rem", 
-          backgroundColor: "#f8d7da",
-          color: "#721c24",
-          borderRadius: "0.25rem",
-          marginBottom: "1rem"
-        }}>
+        <div className="alert alert-error">
           {error}
         </div>
       )}
 
       {injuries.length > 0 ? (
         <div>
-          <h4>Previous Injury Assessments</h4>
-          <p style={{ marginBottom: "1rem" }}>
+          <h3>Previous Injury Assessments</h3>
+          <p className="text-muted">
             Select the injuries you want to include in your recovery plan:
           </p>
+          
           {injuries.map((injury, index) => (
             <div 
               key={index}
-              style={{ 
-                marginBottom: "1.5rem", 
-                padding: "1rem",
-                backgroundColor: "#f8f9fa",
-                borderRadius: "4px",
-                border: "1px solid #dee2e6",
-                position: "relative"
-              }}
+              className="injury-card"
             >
-              <div style={{ 
-                display: "flex", 
-                justifyContent: "space-between", 
-                alignItems: "flex-start",
-                marginBottom: "1rem"
-              }}>
-                <div style={{ display: "flex", alignItems: "center" }}>
+              <div className="injury-header">
+                <div>
                   <input 
                     type="checkbox" 
                     id={`injury-${index}`}
@@ -146,35 +130,29 @@ function CreateNewRecoveryPlan({ userEmail }) {
                     onChange={() => toggleInjurySelection(index)}
                     style={{ marginRight: "0.5rem", transform: "scale(1.2)" }}
                   />
-                  <label htmlFor={`injury-${index}`} style={{ fontWeight: "bold", fontSize: "1.1rem" }}>
+                  <label htmlFor={`injury-${index}`} className="injury-title">
                     {injury.body_part} Injury
                   </label>
                 </div>
                 <div>
                   {deleteConfirmation.show && deleteConfirmation.index === index ? (
-                    <div style={{ display: "flex", gap: "0.5rem" }}>
+                    <div className="d-flex" style={{ gap: "0.5rem" }}>
                       <button 
                         onClick={() => handleDeleteInjury(index)}
+                        className="btn btn-sm"
                         style={{
                           backgroundColor: "#dc3545",
-                          color: "white",
-                          border: "none",
-                          padding: "0.25rem 0.5rem",
-                          borderRadius: "4px",
-                          cursor: "pointer"
+                          color: "white"
                         }}
                       >
                         Confirm
                       </button>
                       <button
                         onClick={() => setDeleteConfirmation({ show: false, index: null })}
+                        className="btn btn-sm"
                         style={{
                           backgroundColor: "#6c757d",
-                          color: "white",
-                          border: "none",
-                          padding: "0.25rem 0.5rem",
-                          borderRadius: "4px",
-                          cursor: "pointer"
+                          color: "white"
                         }}
                       >
                         Cancel
@@ -183,13 +161,11 @@ function CreateNewRecoveryPlan({ userEmail }) {
                   ) : (
                     <button 
                       onClick={() => setDeleteConfirmation({ show: true, index })}
+                      className="btn btn-sm"
                       style={{
                         backgroundColor: "transparent",
                         color: "#dc3545",
-                        border: "1px solid #dc3545",
-                        padding: "0.25rem 0.5rem",
-                        borderRadius: "4px",
-                        cursor: "pointer"
+                        border: "1px solid #dc3545"
                       }}
                     >
                       Delete
@@ -198,150 +174,157 @@ function CreateNewRecoveryPlan({ userEmail }) {
                 </div>
               </div>
 
-              <div style={{ marginBottom: "0.5rem" }}>
-                <strong>Description:</strong> {injury.hurting_description}
-              </div>
-              <div style={{ marginBottom: "0.5rem" }}>
-                <strong>Date of Onset:</strong> {injury.date_of_onset}
-              </div>
-              <div style={{ marginBottom: "0.5rem" }}>
-                <strong>Aggravating Factors:</strong> {injury.aggravating_factors}
-              </div>
-              <div style={{ marginBottom: "0.5rem" }}>
-                <strong>Easing Factors:</strong> {injury.easing_factors}
-              </div>
-              <div style={{ marginBottom: "0.5rem" }}>
-                <strong>Mechanism of Injury:</strong> {injury.mechanism_of_injury}
-              </div>
-              <div style={{ marginBottom: "0.5rem" }}>
-                <strong>Pain Levels:</strong> Best: {injury.severity_best}, Worst: {injury.severity_worst}, Daily Avg: {injury.severity_daily_avg}
-              </div>
-              <div style={{ marginBottom: "0.5rem" }}>
-                <strong>Nature of Pain:</strong> {injury.nature_of_pain}
-              </div>
-              <div style={{ marginBottom: "0.5rem" }}>
-                <strong>Stage:</strong> {injury.stage}
-              </div>
-              <div style={{ marginBottom: "0.5rem" }}>
-                <strong>Stability:</strong> {injury.stability}
-              </div>
-              <div style={{ marginBottom: "0.5rem" }}>
-                <strong>Special Tests:</strong> {formatSpecialTests(injury.specialized_data?.special_tests)}
-              </div>
+              <div className="injury-body">
+                <div className="injury-grid">
+                  <div className="injury-field">
+                    <div className="injury-label">Description:</div>
+                    <div className="injury-value">{injury.hurting_description}</div>
+                  </div>
+                  <div className="injury-field">
+                    <div className="injury-label">Date of Onset:</div>
+                    <div className="injury-value">{injury.date_of_onset}</div>
+                  </div>
+                  <div className="injury-field">
+                    <div className="injury-label">Aggravating Factors:</div>
+                    <div className="injury-value">{injury.aggravating_factors}</div>
+                  </div>
+                  <div className="injury-field">
+                    <div className="injury-label">Easing Factors:</div>
+                    <div className="injury-value">{injury.easing_factors}</div>
+                  </div>
+                  <div className="injury-field">
+                    <div className="injury-label">Mechanism of Injury:</div>
+                    <div className="injury-value">{injury.mechanism_of_injury}</div>
+                  </div>
+                  <div className="injury-field">
+                    <div className="injury-label">Pain Levels:</div>
+                    <div className="injury-value">
+                      Best: {injury.severity_best}, 
+                      Worst: {injury.severity_worst}, 
+                      Daily Avg: {injury.severity_daily_avg}
+                    </div>
+                  </div>
+                  <div className="injury-field">
+                    <div className="injury-label">Nature of Pain:</div>
+                    <div className="injury-value">{injury.nature_of_pain}</div>
+                  </div>
+                  <div className="injury-field">
+                    <div className="injury-label">Stage:</div>
+                    <div className="injury-value">{injury.stage}</div>
+                  </div>
+                  <div className="injury-field">
+                    <div className="injury-label">Stability:</div>
+                    <div className="injury-value">{injury.stability}</div>
+                  </div>
+                  <div className="injury-field">
+                    <div className="injury-label">Special Tests:</div>
+                    <div className="injury-value">{formatSpecialTests(injury.specialized_data?.special_tests)}</div>
+                  </div>
+                </div>
 
-              <div style={{ 
-                marginTop: "1.5rem", 
-                padding: "1rem", 
-                backgroundColor: "#fff",
-                borderRadius: "4px",
-                border: "1px solid #dee2e6"
-              }}>
-                <h5 style={{ color: "#ff4646", marginBottom: "1rem" }}>AI Analysis</h5>
-                <div style={{ marginBottom: "1rem" }}>
-                  <strong>Diagnosis:</strong>
-                  <p>{injury.diagnosis}</p>
-                </div>
-                <div style={{ marginBottom: "1rem" }}>
-                  <strong>Clinical Reasoning:</strong>
-                  <p style={{ whiteSpace: "pre-wrap" }}>{injury.reasoning}</p>
-                </div>
-                <div>
-                  <strong>Recommendations:</strong>
-                  <p>{injury.recommendations}</p>
+                <div className="diagnosis-section">
+                  <h4>AI Analysis</h4>
+                  <div className="diagnosis-field">
+                    <div className="diagnosis-label">Diagnosis:</div>
+                    <div className="diagnosis-content">{injury.diagnosis}</div>
+                  </div>
+                  <div className="diagnosis-field">
+                    <div className="diagnosis-label">Clinical Reasoning:</div>
+                    <div className="diagnosis-content">{injury.reasoning}</div>
+                  </div>
+                  <div className="diagnosis-field">
+                    <div className="diagnosis-label">Recommendations:</div>
+                    <div className="diagnosis-content">{injury.recommendations}</div>
+                  </div>
                 </div>
               </div>
             </div>
           ))}
 
-          <div style={{ marginTop: "2rem", marginBottom: "2rem" }}>
+          <div className="generate-plan-btn">
             <button
               onClick={handleGeneratePlan}
               disabled={isGenerating || selectedInjuries.length === 0}
+              className="btn btn-with-icon"
               style={{
                 background: "#ff4646",
                 color: "#fff",
-                padding: "0.5rem 1rem",
-                border: "none",
-                cursor: isGenerating || selectedInjuries.length === 0 ? "not-allowed" : "pointer",
-                borderRadius: "4px",
                 opacity: isGenerating || selectedInjuries.length === 0 ? 0.7 : 1
               }}
             >
               {isGenerating ? "Generating Plan..." : "Generate Recovery Plan"}
             </button>
-            <p style={{ color: "#666", fontSize: "0.9rem", marginTop: "0.5rem" }}>
+            <p className="text-muted" style={{ marginTop: "0.5rem" }}>
               This will create a personalized weekly exercise plan based on your selected injuries.
             </p>
           </div>
 
           {recoveryPlan && (
-            <div style={{ marginTop: "2rem" }}>
-              <h4>Your Weekly Recovery Plan</h4>
-              <p style={{ marginBottom: "1rem" }}>
-                Below is your personalized recovery plan based on your injury assessments:
-              </p>
+            <div className="schedule-container">
+              <div className="schedule-header">
+                <h3 className="schedule-title">Your Weekly Recovery Plan</h3>
+              </div>
               
               {Object.entries(recoveryPlan).map(([day, exercises]) => (
-                <div 
-                  key={day}
-                  style={{ 
-                    marginBottom: "1.5rem", 
-                    padding: "1rem",
-                    backgroundColor: "#f8f9fa",
-                    borderRadius: "4px",
-                    border: "1px solid #dee2e6"
-                  }}
-                >
-                  <h5 style={{ marginBottom: "0.75rem", color: "#333" }}>{day}</h5>
+                <div key={day} className="day-container">
+                  <div className="day-header">
+                    <h4 className="day-title">{day}</h4>
+                    <span className="day-exercises-count">{exercises.length} exercises</span>
+                  </div>
                   
-                  {exercises.length > 0 ? (
-                    exercises.map((exercise, index) => (
-                      <div 
-                        key={index}
-                        style={{ 
-                          marginBottom: "1rem",
-                          padding: "0.75rem",
-                          backgroundColor: "#fff",
-                          borderRadius: "4px",
-                          border: "1px solid #eee"
-                        }}
-                      >
-                        <div style={{ fontWeight: "bold", color: "#ff4646" }}>
-                          {exercise.name || (typeof exercise === 'string' ? exercise : 'Exercise')}
+                  <div className="day-content">
+                    {exercises.length > 0 ? (
+                      exercises.map((exercise, index) => (
+                        <div 
+                          key={index}
+                          style={{ 
+                            marginBottom: "1rem",
+                            padding: "0.75rem",
+                            backgroundColor: "#fff",
+                            borderRadius: "4px",
+                            border: "1px solid #eee"
+                          }}
+                        >
+                          <div style={{ fontWeight: "bold", color: "#ff4646" }}>
+                            {exercise.name || (typeof exercise === 'string' ? exercise : 'Exercise')}
+                          </div>
+                          
+                          {exercise.sets && exercise.reps && (
+                            <div style={{ fontSize: "0.9rem", color: "#555", marginTop: "0.25rem" }}>
+                              {exercise.sets} sets x {exercise.reps} reps
+                            </div>
+                          )}
+                          
+                          {exercise.description && (
+                            <div style={{ marginTop: "0.5rem" }}>
+                              <strong>Instructions:</strong>
+                              <p>{exercise.description}</p>
+                            </div>
+                          )}
+                          
+                          {exercise.purpose && (
+                            <div style={{ marginTop: "0.5rem", fontSize: "0.9rem", color: "#666" }}>
+                              <strong>Purpose:</strong> {exercise.purpose}
+                            </div>
+                          )}
                         </div>
-                        
-                        {exercise.sets && exercise.reps && (
-                          <div style={{ fontSize: "0.9rem", color: "#555", marginTop: "0.25rem" }}>
-                            {exercise.sets} sets x {exercise.reps} reps
-                          </div>
-                        )}
-                        
-                        {exercise.description && (
-                          <div style={{ marginTop: "0.5rem" }}>
-                            <strong>Instructions:</strong>
-                            <p>{exercise.description}</p>
-                          </div>
-                        )}
-                        
-                        {exercise.purpose && (
-                          <div style={{ marginTop: "0.5rem", fontSize: "0.9rem", color: "#666" }}>
-                            <strong>Purpose:</strong> {exercise.purpose}
-                          </div>
-                        )}
+                      ))
+                    ) : (
+                      <div className="day-rest">
+                        <p>Rest day or no exercises scheduled.</p>
                       </div>
-                    ))
-                  ) : (
-                    <p style={{ color: "#666", fontStyle: "italic" }}>Rest day or no exercises scheduled.</p>
-                  )}
+                    )}
+                  </div>
                 </div>
               ))}
             </div>
           )}
         </div>
       ) : (
-        <div>
+        <div className="empty-state">
+          <h3>No Injury Assessments</h3>
           <p>No injury assessments found for {userEmail}.</p>
-          <p>Please add injury information first by going to the "Add an Injury" section.</p>
+          <p className="text-muted">Please add injury information first by going to the "Add an Injury" section.</p>
         </div>
       )}
     </div>

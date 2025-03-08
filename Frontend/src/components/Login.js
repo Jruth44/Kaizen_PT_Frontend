@@ -1,8 +1,8 @@
-// Login.js
+// src/components/Login.js
 import React, { useState } from 'react';
 import { supabase } from '../supabaseClient';
 
-function Login({ onLogin }) {
+function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isRegistering, setIsRegistering] = useState(false);
@@ -16,10 +16,10 @@ function Login({ onLogin }) {
     setInfoMsg(null);
     setLoading(true);
 
-    if (isRegistering) {
-      // Registration flow
-      try {
-        const { error, data } = await supabase.auth.signUp({
+    try {
+      if (isRegistering) {
+        // Registration flow
+        const { error } = await supabase.auth.signUp({
           email,
           password,
         });
@@ -29,31 +29,22 @@ function Login({ onLogin }) {
         } else {
           setInfoMsg("Registration successful! Please check your email for a confirmation link.");
         }
-      } catch (err) {
-        setErrorMsg("An unexpected error occurred. Please try again.");
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    } else {
-      // Login flow
-      try {
-        const { error, data } = await supabase.auth.signInWithPassword({
+      } else {
+        // Login flow
+        const { error } = await supabase.auth.signInWithPassword({
           email,
           password,
         });
         
         if (error) {
           setErrorMsg(error.message);
-        } else {
-          onLogin(data.session);
         }
-      } catch (err) {
-        setErrorMsg("An unexpected error occurred. Please try again.");
-        console.error(err);
-      } finally {
-        setLoading(false);
       }
+    } catch (err) {
+      setErrorMsg("An unexpected error occurred. Please try again.");
+      console.error(err);
+    } finally {
+      setLoading(false);
     }
   };
 

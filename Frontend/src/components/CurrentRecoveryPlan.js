@@ -1,3 +1,4 @@
+// src/components/CurrentRecoveryPlan.js
 import React, { useState, useEffect } from "react";
 import { getWeeklySchedule } from "../services/api";
 import RecoveryExerciseCard from "./RecoveryExerciseCard";
@@ -47,17 +48,17 @@ function CurrentRecoveryPlan() {
   };
 
   if (loading) {
-    return <div>Loading your recovery plan...</div>;
+    return (
+      <div className="loading-container">
+        <div className="loading-spinner"></div>
+        <p>Loading your recovery plan...</p>
+      </div>
+    );
   }
 
   if (error) {
     return (
-      <div style={{ 
-        padding: "0.75rem", 
-        backgroundColor: "#f8d7da",
-        color: "#721c24",
-        borderRadius: "0.25rem"
-      }}>
+      <div className="alert alert-error">
         {error}
       </div>
     );
@@ -65,9 +66,10 @@ function CurrentRecoveryPlan() {
 
   if (!weeklyPlan) {
     return (
-      <div>
+      <div className="empty-state">
         <h3>Current Recovery Plan</h3>
-        <p>You don't have a recovery plan yet. Please go to "Create a New Recovery Plan" to generate one.</p>
+        <p>You don't have a recovery plan yet.</p>
+        <p className="text-muted">Please go to "Create a New Recovery Plan" to generate one.</p>
       </div>
     );
   }
@@ -77,37 +79,25 @@ function CurrentRecoveryPlan() {
 
   return (
     <div>
-      <h3>Current Recovery Plan</h3>
-      <p>Here are your exercises for today:</p>
+      <div className="page-header">
+        <h2>Current Recovery Plan</h2>
+        <p className="text-muted">Here are your exercises for today:</p>
+      </div>
 
-      <div style={{ marginBottom: "1.5rem" }}>
-        <div style={{ 
-          display: "flex", 
-          justifyContent: "space-between", 
-          backgroundColor: "#f8f9fa",
-          borderRadius: "4px",
-          padding: "0.5rem",
-          marginBottom: "1rem"
-        }}>
-          {Object.keys(weeklyPlan).map(day => (
-            <button
-              key={day}
-              onClick={() => handleDayChange(day)}
-              style={{
-                padding: "0.5rem",
-                backgroundColor: day === currentDay ? "#ff4646" : "transparent",
-                color: day === currentDay ? "white" : "#333",
-                border: "none",
-                borderRadius: "4px",
-                cursor: "pointer"
-              }}
-            >
-              {day.substring(0, 3)}
-            </button>
-          ))}
-        </div>
+      <div className="week-tabs">
+        {Object.keys(weeklyPlan).map(day => (
+          <button
+            key={day}
+            onClick={() => handleDayChange(day)}
+            className={`week-tab ${day === currentDay ? "active" : ""}`}
+          >
+            {day.substring(0, 3)}
+          </button>
+        ))}
+      </div>
 
-        <h4>{currentDay}'s Exercises</h4>
+      <div className="day-exercises">
+        <h3>{currentDay}'s Exercises</h3>
         
         {hasExercises ? (
           weeklyPlan[currentDay].map((exercise, index) => (
@@ -125,15 +115,9 @@ function CurrentRecoveryPlan() {
             />
           ))
         ) : (
-          <div style={{ 
-            padding: "1rem", 
-            backgroundColor: "#f8f9fa", 
-            borderRadius: "4px",
-            textAlign: "center",
-            color: "#666"
-          }}>
+          <div className="empty-state">
             <p>No exercises scheduled for {currentDay}.</p>
-            <p>This might be a rest day, or you haven't generated a recovery plan yet.</p>
+            <p className="text-muted">This might be a rest day, or you haven't generated a recovery plan yet.</p>
           </div>
         )}
       </div>

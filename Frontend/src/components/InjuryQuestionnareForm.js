@@ -1,10 +1,9 @@
-// /src/components/InjuryQuestionnareForm.js
+// src/components/InjuryQuestionnaireForm.js
 import React, { useState } from "react";
 import { submitInjuryQuestionnaire } from "../services/api";
 
-// Import the BodyPartSelector instead of BodyMap
+// Component imports
 import BodyPartSelector from "./BodyPartSelector";
-
 import BasicInfoFields from "./BasicInfoFields";
 import SecondaryInfoFields from "./SecondaryInfoFields";
 import PainRatingScale from "./PainRatingScale";
@@ -28,31 +27,21 @@ function InjuryQuestionnaireForm({ selectedPatient }) {
   // Form validation function
   const validateForm = () => {
     const errors = {};
+    const requiredFields = [
+      'hurting_description',
+      'date_of_onset',
+      'what_makes_it_worse',
+      'what_makes_it_better',
+      'mechanism_of_injury',
+      'nature_of_pain'
+    ];
     
     // Required fields validation
-    if (!formData.hurting_description.trim()) {
-      errors.hurting_description = "Please describe where it hurts and how it feels";
-    }
-    
-    if (!formData.date_of_onset.trim()) {
-      errors.date_of_onset = "Please provide when the injury started";
-    }
-    
-    if (!formData.what_makes_it_worse.trim()) {
-      errors.what_makes_it_worse = "Please describe what makes it worse";
-    }
-    
-    if (!formData.what_makes_it_better.trim()) {
-      errors.what_makes_it_better = "Please describe what makes it better";
-    }
-    
-    if (!formData.mechanism_of_injury.trim()) {
-      errors.mechanism_of_injury = "Please describe how the injury happened";
-    }
-    
-    if (!formData.nature_of_pain.trim()) {
-      errors.nature_of_pain = "Please describe the nature of pain";
-    }
+    requiredFields.forEach(field => {
+      if (!formData[field] || !formData[field].trim()) {
+        errors[field] = `This field is required`;
+      }
+    });
     
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
@@ -200,7 +189,7 @@ function InjuryQuestionnaireForm({ selectedPatient }) {
         Add or Update Your Injury Info
       </h2>
       <p style={{ fontSize: "0.9rem", color: "#666", marginBottom: "1.5rem" }}>
-        Please fill out the questions below to help us (and our AI) understand
+        Please fill out the questions below to help us understand
         your current injury. Don't worry if you're unsure about any
         tests or technical details—just fill in what you can!
       </p>
@@ -222,7 +211,7 @@ function InjuryQuestionnaireForm({ selectedPatient }) {
         </div>
       )}
 
-      {/* Body Part Selector Dropdown - replacing the interactive Body Map */}
+      {/* Body Part Selector Dropdown */}
       <div style={{ marginBottom: "2rem" }}>
         <BodyPartSelector
           selectedBodyPart={formData.body_part}
@@ -240,7 +229,6 @@ function InjuryQuestionnaireForm({ selectedPatient }) {
           boxShadow: "0 2px 10px rgba(0,0,0,0.05)",
         }}
       >
-        {/* The body_part is tracked via the selector above, but we store it in hidden input too */}
         <input type="hidden" name="body_part" value={formData.body_part} />
 
         <div style={{ marginBottom: "2rem" }}>

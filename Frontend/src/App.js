@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios"; // For setting global defaults
+import axios from "axios";
 import Sidebar from "./components/Sidebar";
 import Header from "./components/Header";
 import CurrentRecoveryPlan from "./components/CurrentRecoveryPlan";
@@ -7,7 +7,7 @@ import CreateNewRecoveryPlan from "./components/CreateNewRecoveryPlan";
 import AddInjury from "./components/AddInjury";
 import TalkWithPT from "./components/TalkWithPT";
 import Login from "./components/Login";
-import { supabase } from "./supabaseClient"; // Import the centralized client
+import { supabase } from "./supabaseClient";
 
 import "./App.css";
 
@@ -19,16 +19,16 @@ function App() {
   // Subscribe to auth state changes
   useEffect(() => {
     const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
-      console.log("Auth state change:", event, session);
       setSession(session);
       setUser(session?.user || null);
     });
+    
     // Check for an existing session on initial load
     supabase.auth.getSession().then(({ data: { session } }) => {
-      console.log("Initial session:", session);
       setSession(session);
       setUser(session?.user || null);
     });
+    
     return () => {
       authListener.subscription.unsubscribe();
     };
@@ -37,7 +37,6 @@ function App() {
   // Set Axios default Authorization header when session changes
   useEffect(() => {
     if (session && session.access_token) {
-      console.log("Setting Axios Authorization header:", session.access_token);
       axios.defaults.headers.common["Authorization"] = `Bearer ${session.access_token}`;
     } else {
       delete axios.defaults.headers.common["Authorization"];
@@ -46,7 +45,7 @@ function App() {
 
   // If the user is not logged in, display the Login component
   if (!session) {
-    return <Login onLogin={(session) => { setSession(session); setUser(session.user); }} />;
+    return <Login />;
   }
 
   let content = null;
@@ -77,7 +76,7 @@ function App() {
   return (
     <div className="app-container">
       <Sidebar 
-        onSelectPage={(page) => setSelectedPage(page)} 
+        onSelectPage={setSelectedPage} 
         selectedPage={selectedPage} 
       />
       <div className="main-content">
