@@ -1,6 +1,5 @@
 // TalkWithPT.js
 import React, { useState, useEffect, useRef } from "react";
-import axios from "axios";
 import { getPatientInjuries, getWeeklySchedule } from "../services/api";
 import { supabase } from "../supabaseClient";
 
@@ -66,41 +65,6 @@ function TalkWithPT() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  const createSystemPrompt = () => {
-    let prompt = "You are a helpful and knowledgeable physical therapist assistant, providing guidance and advice about injuries, exercises, and physical recovery. ";
-    
-    // Add injury context if available
-    if (userContext.injuries && userContext.injuries.length > 0) {
-      prompt += "The user has the following injuries:\n";
-      userContext.injuries.forEach((injury, index) => {
-        prompt += `Injury ${index + 1}: ${injury.body_part} - ${injury.hurting_description}\n`;
-        if (injury.diagnosis) {
-          prompt += `Diagnosis: ${injury.diagnosis}\n`;
-        }
-        prompt += `Pain levels: Best=${injury.severity_best || 'N/A'}, Worst=${injury.severity_worst || 'N/A'}\n`;
-      });
-    }
-    
-    // Add recovery plan context if available
-    if (userContext.recoveryPlan) {
-      prompt += "\nThe user has a recovery plan with the following exercises:\n";
-      Object.entries(userContext.recoveryPlan).forEach(([day, exercises]) => {
-        if (exercises.length > 0) {
-          prompt += `${day}: `;
-          exercises.forEach((exercise, i) => {
-            const exerciseName = exercise.name || (typeof exercise === 'string' ? exercise : 'Exercise');
-            prompt += `${exerciseName}${i < exercises.length - 1 ? ', ' : ''}`;
-          });
-          prompt += "\n";
-        }
-      });
-    }
-    
-    prompt += "\nProvide concise, helpful answers about physical therapy, exercises, and recovery. Don't suggest medical diagnoses, but you can explain potential causes of symptoms. If you don't know something, be honest about it. Always prioritize safety and recommend consulting a healthcare provider for serious concerns.";
-    
-    return prompt;
-  };
-
   const handleSend = async () => {
     if (!input.trim()) return;
     
@@ -113,8 +77,9 @@ function TalkWithPT() {
     
     try {
       // Create message history for Claude
+      // We only send the conversation history to the backend
+      // The backend will handle adding the system prompt with context
       const messageHistory = [
-        { role: "system", content: createSystemPrompt() },
         ...messages.map(msg => ({
           role: msg.role === "assistant" ? "assistant" : "user",
           content: msg.content
