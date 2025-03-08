@@ -77,8 +77,6 @@ function TalkWithPT() {
     
     try {
       // Create message history for Claude
-      // We only send the conversation history to the backend
-      // The backend will handle adding the system prompt with context
       const messageHistory = [
         ...messages.map(msg => ({
           role: msg.role === "assistant" ? "assistant" : "user",
@@ -103,9 +101,10 @@ function TalkWithPT() {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
       
-      // Process the streaming response
+      // Process the streaming response as SSE (Server-Sent Events)
       const reader = response.body.getReader();
       const decoder = new TextDecoder();
+      let buffer = "";
       let fullContent = "";
       
       while (true) {
@@ -115,10 +114,25 @@ function TalkWithPT() {
           break;
         }
         
-        // Decode chunk and append to streaming message
-        const chunk = decoder.decode(value);
-        fullContent += chunk;
-        setStreamingMessage(fullContent);
+        // Decode chunk and add to buffer
+        buffer += decoder.decode(value, { stream: true });
+        
+        // Process any complete events (SSE events are separated by double newlines)
+        const lines = buffer.split('\n\n');
+        
+        // Keep the last line in the buffer (it might be incomplete)
+        buffer = lines.pop() || '';
+        
+        // Process all complete events
+        for (const line of lines) {
+          // Extract data from SSE format (data: <content>)
+          const dataMatch = line.match(/^data: (.*)/);
+          if (dataMatch) {
+            const content = dataMatch[1];
+            fullContent += content;
+            setStreamingMessage(fullContent);
+          }
+        }
       }
       
       // Add final assistant message and clear streaming content
