@@ -12,7 +12,6 @@ const ShoulderTests = ({ specializedData, onSpecialTestChange, onAngleChange }) 
         <label style={{ display: "block", fontWeight: "bold" }}>
           Painful Arc Test
         </label>
-        <small style={{ color: "#555" }}>
           <ol style={{ paddingLeft: "1.5rem", marginTop: "0.5rem" }}>
             <li>Stand in front of a mirror with your arm relaxed at your side.</li>
             <li>Slowly raise your arm out to the side, palm facing down.</li>
@@ -20,8 +19,6 @@ const ShoulderTests = ({ specializedData, onSpecialTestChange, onAngleChange }) 
             <li>Lower your arm back down in the same path.</li>
             <li>Note if you experience pain between approximately 60-120 degrees of elevation (midway through the movement).</li>
           </ol>
-          A painful arc during this range suggests potential rotator cuff or impingement issues.
-        </small>
         <br />
         <label style={{ marginTop: "0.3rem", display: "flex", alignItems: "center" }}>
           <input
@@ -36,15 +33,12 @@ const ShoulderTests = ({ specializedData, onSpecialTestChange, onAngleChange }) 
 
       <div style={{ marginBottom: "0.5rem" }}>
         <label style={{ display: "block", fontWeight: "bold" }}>Active Shoulder Flexion Test</label>
-        <small style={{ color: "#555" }}>
           <ol style={{ paddingLeft: "1.5rem", marginTop: "0.5rem" }}>
             <li>Stand with your arm relaxed at your side.</li>
             <li>Slowly raise your arm forward and upward as high as possible.</li>
             <li>Note if you experience pain, particularly at the top of the movement.</li>
             <li>Lower your arm back down slowly.</li>
           </ol>
-          Pain during this movement, especially near the top, may indicate impingement or rotator cuff issues.
-        </small>
         <br />
         <label style={{ marginTop: "0.3rem", display: "flex", alignItems: "center" }}>
           <input
@@ -59,7 +53,6 @@ const ShoulderTests = ({ specializedData, onSpecialTestChange, onAngleChange }) 
 
       <div>
         <label style={{ display: "block", fontWeight: "bold" }}>Resisted External Rotation Test</label>
-        <small style={{ color: "#555" }}>
           <ol style={{ paddingLeft: "1.5rem", marginTop: "0.5rem" }}>
             <li>Stand with your elbow bent at 90 degrees and tucked close to your side.</li>
             <li>Position your forearm across your abdomen.</li>
@@ -67,8 +60,6 @@ const ShoulderTests = ({ specializedData, onSpecialTestChange, onAngleChange }) 
             <li>Alternatively, use your other hand to provide resistance.</li>
             <li>Note if you experience pain with this resistance.</li>
           </ol>
-          Pain during this resistance test may indicate infraspinatus or teres minor issues.
-        </small>
         <br />
         <label style={{ marginTop: "0.3rem", display: "flex", alignItems: "center" }}>
           <input

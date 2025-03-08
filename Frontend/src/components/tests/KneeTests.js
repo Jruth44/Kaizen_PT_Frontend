@@ -12,15 +12,12 @@ const KneeTests = ({ specializedData, onSpecialTestChange, onAngleChange }) => {
         <label style={{ display: "block", fontWeight: "bold" }}>
           Knee Pain with Squatting Test
         </label>
-        <small style={{ color: "#555" }}>
           <ol style={{ paddingLeft: "1.5rem", marginTop: "0.5rem" }}>
             <li>Stand with feet shoulder-width apart, holding onto a stable surface for balance if needed.</li>
             <li>Slowly bend your knees to perform a partial squat (only go as deep as comfortable).</li>
             <li>Pay attention to any pain, clicking, or grinding in the knee joint.</li>
             <li>Return to standing position slowly.</li>
           </ol>
-          Pain during squatting, especially at the front of the knee, may indicate patellofemoral issues or meniscus problems.
-        </small>
         <br />
         <label style={{ marginTop: "0.3rem", display: "flex", alignItems: "center" }}>
           <input
@@ -35,15 +32,12 @@ const KneeTests = ({ specializedData, onSpecialTestChange, onAngleChange }) => {
 
       <div style={{ marginBottom: "0.5rem" }}>
         <label style={{ display: "block", fontWeight: "bold" }}>Single Leg Balance Test</label>
-        <small style={{ color: "#555" }}>
           <ol style={{ paddingLeft: "1.5rem", marginTop: "0.5rem" }}>
             <li>Stand near a wall or stable surface (in case you need support).</li>
             <li>Lift one foot off the ground and balance on the affected leg.</li>
             <li>Try to maintain this position for 30 seconds.</li>
             <li>Note any pain, instability, or difficulty maintaining balance.</li>
           </ol>
-          Difficulty maintaining balance or experiencing pain may indicate knee instability or weakness.
-        </small>
         <br />
         <label style={{ marginTop: "0.3rem", display: "flex", alignItems: "center" }}>
           <input

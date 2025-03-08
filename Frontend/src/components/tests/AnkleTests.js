@@ -12,15 +12,12 @@ const AnkleTests = ({ specializedData, onSpecialTestChange, onAngleChange }) => 
         <label style={{ display: "block", fontWeight: "bold" }}>
           Single Leg Balance Test
         </label>
-        <small style={{ color: "#555" }}>
           <ol style={{ paddingLeft: "1.5rem", marginTop: "0.5rem" }}>
             <li>Stand near a wall or stable surface for support if needed.</li>
             <li>Lift the uninjured foot off the ground and try to balance on the affected ankle.</li>
             <li>Try to maintain this position for 30 seconds.</li>
             <li>Note any pain, instability, or difficulty maintaining balance.</li>
           </ol>
-          Difficulty balancing or experiencing instability may indicate ankle ligament injury or weakness.
-        </small>
         <br />
         <label style={{ marginTop: "0.3rem", display: "flex", alignItems: "center" }}>
           <input
@@ -35,7 +32,6 @@ const AnkleTests = ({ specializedData, onSpecialTestChange, onAngleChange }) => 
 
       <div style={{ marginBottom: "0.5rem" }}>
         <label style={{ display: "block", fontWeight: "bold" }}>Heel Raise Test</label>
-        <small style={{ color: "#555" }}>
           <ol style={{ paddingLeft: "1.5rem", marginTop: "0.5rem" }}>
             <li>Stand flat on both feet, using a wall or chair for balance if needed.</li>
             <li>Lift both heels off the ground, rising onto your toes.</li>
@@ -43,8 +39,6 @@ const AnkleTests = ({ specializedData, onSpecialTestChange, onAngleChange }) => 
             <li>Attempt to repeat the heel raise 10 times.</li>
             <li>Note any pain, weakness, or inability to lift the heel.</li>
           </ol>
-          Difficulty performing heel raises or pain during the movement may indicate Achilles tendon issues or calf weakness.
-        </small>
         <br />
         <label style={{ marginTop: "0.3rem", display: "flex", alignItems: "center" }}>
           <input
@@ -59,15 +53,12 @@ const AnkleTests = ({ specializedData, onSpecialTestChange, onAngleChange }) => 
 
       <div style={{ marginBottom: "0.5rem" }}>
         <label style={{ display: "block", fontWeight: "bold" }}>Ankle Swelling Check</label>
-        <small style={{ color: "#555" }}>
           <ol style={{ paddingLeft: "1.5rem", marginTop: "0.5rem" }}>
             <li>Compare your affected ankle with your unaffected ankle.</li>
             <li>Look for differences in size, particularly around the ankle bones.</li>
             <li>Press gently with your finger around the ankle and note if it leaves an indentation (pitting edema).</li>
             <li>Check if there's tenderness when you press around the ankle bones.</li>
           </ol>
-          Swelling and tenderness around the outside of the ankle may indicate ligament injury.
-        </small>
         <br />
         <label style={{ marginTop: "0.3rem", display: "flex", alignItems: "center" }}>
           <input

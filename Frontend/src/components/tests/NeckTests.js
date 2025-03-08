@@ -16,7 +16,6 @@ const NeckTests = ({ specializedData, onSpecialTestChange, onAngleChange }) => {
         <label style={{ display: "block", fontWeight: "bold" }}>
           Gentle Active Range of Motion Test
         </label>
-        <small style={{ color: "#555" }}>
           <ol style={{ paddingLeft: "1.5rem", marginTop: "0.5rem" }}>
             <li>Sit in a comfortable, upright position.</li>
             <li>Slowly and gently turn your head to the right as far as comfortable.</li>
@@ -25,8 +24,6 @@ const NeckTests = ({ specializedData, onSpecialTestChange, onAngleChange }) => {
             <li>Finally, gently look up toward the ceiling, then down toward the floor.</li>
             <li>Note any movements that cause pain, and if the pain radiates into your arms.</li>
           </ol>
-          Pain or limited movement during these motions helps identify which movements are problematic.
-        </small>
         <br />
         <label style={{ marginTop: "0.3rem", display: "flex", alignItems: "center" }}>
           <input
@@ -41,7 +38,6 @@ const NeckTests = ({ specializedData, onSpecialTestChange, onAngleChange }) => {
 
       <div style={{ marginBottom: "0.5rem" }}>
         <label style={{ display: "block", fontWeight: "bold" }}>Scalene Stretch Test</label>
-        <small style={{ color: "#555" }}>
           <ol style={{ paddingLeft: "1.5rem", marginTop: "0.5rem" }}>
             <li>Sit in a comfortable, upright position.</li>
             <li>Gently tilt your head away from the painful side (ear toward shoulder).</li>
@@ -49,8 +45,6 @@ const NeckTests = ({ specializedData, onSpecialTestChange, onAngleChange }) => {
             <li>Hold for 5-10 seconds if comfortable.</li>
             <li>Note if this reproduces your typical pain or sends pain/tingling down your arm.</li>
           </ol>
-          Reproduction of arm pain or tingling with this stretch may indicate scalene muscle involvement or nerve irritation.
-        </small>
         <br />
         <label style={{ marginTop: "0.3rem", display: "flex", alignItems: "center" }}>
           <input

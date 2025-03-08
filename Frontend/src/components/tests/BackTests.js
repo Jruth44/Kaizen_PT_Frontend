@@ -12,7 +12,6 @@ const BackTests = ({ specializedData, onSpecialTestChange, onAngleChange, handle
         <label style={{ display: "block", fontWeight: "bold" }}>
           Forward Bending Test
         </label>
-        <small style={{ color: "#555" }}>
           <ol style={{ paddingLeft: "1.5rem", marginTop: "0.5rem" }}>
             <li>Stand with feet shoulder-width apart.</li>
             <li>Slowly bend forward, reaching toward your toes (only go as far as comfortable).</li>
@@ -20,8 +19,6 @@ const BackTests = ({ specializedData, onSpecialTestChange, onAngleChange, handle
             <li>Return to standing position slowly.</li>
             <li>Pay attention to whether the movement makes your symptoms better, worse, or unchanged.</li>
           </ol>
-          Pain during forward bending may indicate disc issues or muscle strain. This also helps assess whether your symptoms centralize (move toward spine) or peripheralize (move away from spine).
-        </small>
         <br />
         <label style={{ marginTop: "0.3rem", display: "flex", alignItems: "center" }}>
           <input
@@ -36,15 +33,12 @@ const BackTests = ({ specializedData, onSpecialTestChange, onAngleChange, handle
 
       <div style={{ marginBottom: "0.5rem" }}>
         <label style={{ display: "block", fontWeight: "bold" }}>Seated Forward Lean Test</label>
-        <small style={{ color: "#555" }}>
           <ol style={{ paddingLeft: "1.5rem", marginTop: "0.5rem" }}>
             <li>Sit on a firm chair with feet flat on the floor.</li>
             <li>Slowly bend forward, reaching toward your feet.</li>
             <li>Note any pain in your back or legs.</li>
             <li>Return to upright sitting position.</li>
           </ol>
-          Pain radiating from your back into your leg during this test may indicate potential nerve involvement.
-        </small>
         <br />
         <label style={{ marginTop: "0.3rem", display: "flex", alignItems: "center" }}>
           <input

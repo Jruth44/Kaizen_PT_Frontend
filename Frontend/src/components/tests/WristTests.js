@@ -12,15 +12,12 @@ const WristTests = ({ specializedData, onSpecialTestChange, onAngleChange }) => 
         <label style={{ display: "block", fontWeight: "bold" }}>
           Modified Phalen's Test (Wrist Flexion Test)
         </label>
-        <small style={{ color: "#555" }}>
           <ol style={{ paddingLeft: "1.5rem", marginTop: "0.5rem" }}>
             <li>Place the backs of your hands together with your fingers pointing down.</li>
             <li>Let your wrists fall into flexion (bend forward).</li>
             <li>Hold this position for 60 seconds.</li>
             <li>Note if you experience numbness or tingling in your fingers, particularly in the thumb, index, middle, or half of the ring finger.</li>
           </ol>
-          Numbness or tingling in these fingers during this test may suggest carpal tunnel syndrome.
-        </small>
         <br />
         <label style={{ marginTop: "0.3rem", display: "flex", alignItems: "center" }}>
           <input
@@ -35,14 +32,11 @@ const WristTests = ({ specializedData, onSpecialTestChange, onAngleChange }) => 
 
       <div style={{ marginBottom: "0.5rem" }}>
         <label style={{ display: "block", fontWeight: "bold" }}>Thumb to Pinky Side Test</label>
-        <small style={{ color: "#555" }}>
           <ol style={{ paddingLeft: "1.5rem", marginTop: "0.5rem" }}>
             <li>Make a fist with your thumb tucked inside your fingers.</li>
             <li>Gently bend your wrist toward your pinky side.</li>
             <li>Note any pain at the base of your thumb or along the thumb side of your wrist.</li>
           </ol>
-          Pain along the thumb side of the wrist with this movement may suggest De Quervain's tenosynovitis, an inflammation of the tendons on the thumb side of the wrist.
-        </small>
         <br />
         <label style={{ marginTop: "0.3rem", display: "flex", alignItems: "center" }}>
           <input

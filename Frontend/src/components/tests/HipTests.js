@@ -12,7 +12,6 @@ const HipTests = ({ specializedData, onSpecialTestChange, onAngleChange }) => {
         <label style={{ display: "block", fontWeight: "bold" }}>
           Hip Flexion Pain Test
         </label>
-        <small style={{ color: "#555" }}>
           <ol style={{ paddingLeft: "1.5rem", marginTop: "0.5rem" }}>
             <li>Lie on your back on a firm surface.</li>
             <li>Slowly bring your knee toward your chest, using your hands to assist if needed.</li>
@@ -20,8 +19,6 @@ const HipTests = ({ specializedData, onSpecialTestChange, onAngleChange }) => {
             <li>Next, while holding your knee to your chest, rotate your lower leg inward (internal rotation).</li>
             <li>Note if this rotation increases your pain.</li>
           </ol>
-          Pain with hip flexion and internal rotation may indicate hip joint issues such as impingement or labral tears.
-        </small>
         <br />
         <label style={{ marginTop: "0.3rem", display: "flex", alignItems: "center" }}>
           <input
@@ -36,7 +33,6 @@ const HipTests = ({ specializedData, onSpecialTestChange, onAngleChange }) => {
 
       <div style={{ marginBottom: "0.5rem" }}>
         <label style={{ display: "block", fontWeight: "bold" }}>Single Leg Stance Test</label>
-        <small style={{ color: "#555" }}>
           <ol style={{ paddingLeft: "1.5rem", marginTop: "0.5rem" }}>
             <li>Stand near a wall or stable surface for support if needed.</li>
             <li>Stand on your affected leg for 30 seconds.</li>
@@ -44,8 +40,6 @@ const HipTests = ({ specializedData, onSpecialTestChange, onAngleChange }) => {
             <li>Check if your pelvis drops on the opposite side (the non-standing leg side).</li>
             <li>Note any pain or difficulty maintaining balance.</li>
           </ol>
-          If your pelvis drops on the non-standing side, this may indicate hip abductor weakness, which is commonly seen in various hip conditions.
-        </small>
         <br />
         <label style={{ marginTop: "0.3rem", display: "flex", alignItems: "center" }}>
           <input
